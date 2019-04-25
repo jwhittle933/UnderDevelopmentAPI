@@ -14,7 +14,9 @@ defmodule ApiWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
       conn
-      |> json(user: user)
+      |> put_status(:created)
+      |> put_resp_header("content-type", "application/json")
+      |> send_resp(200, user: user)
     end
   end
 
