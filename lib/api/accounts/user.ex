@@ -6,6 +6,7 @@ defmodule Api.Accounts.User do
     field :email, :string
     field :name, :string
     field :password, :string
+    has_many :posts, Api.Blog.Post
 
     timestamps()
   end
