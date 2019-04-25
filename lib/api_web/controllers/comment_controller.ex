@@ -8,7 +8,7 @@ defmodule ApiWeb.CommentController do
 
   def index(conn, _params) do
     comment = Blog.list_comment()
-    render(conn, "index.json", comment: comment)
+    json conn, comment: comment
   end
 
   def create(conn, %{"comment" => comment_params}) do
@@ -16,20 +16,20 @@ defmodule ApiWeb.CommentController do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.comment_path(conn, :show, comment))
-      |> render("show.json", comment: comment)
+      |> send_resp(200, comment: comment)
     end
   end
 
   def show(conn, %{"id" => id}) do
     comment = Blog.get_comment!(id)
-    render(conn, "show.json", comment: comment)
+    json conn, comment: comment
   end
 
   def update(conn, %{"id" => id, "comment" => comment_params}) do
     comment = Blog.get_comment!(id)
 
     with {:ok, %Comment{} = comment} <- Blog.update_comment(comment, comment_params) do
-      render(conn, "show.json", comment: comment)
+      json conn, comment: comment
     end
   end
 

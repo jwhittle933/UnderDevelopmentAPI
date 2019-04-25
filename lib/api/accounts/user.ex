@@ -2,6 +2,8 @@ defmodule Api.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:email, :name, :password, :admin, :posts, :comments]}
+
   schema "users" do
     field :email, :string
     field :name, :string
@@ -16,7 +18,7 @@ defmodule Api.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :email, :password])
+    |> cast(attrs, [:name, :email, :password, :admin])
     |> validate_required([:name, :email, :password])
   end
 end

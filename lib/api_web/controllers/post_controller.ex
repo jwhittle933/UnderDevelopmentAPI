@@ -8,26 +8,26 @@ defmodule ApiWeb.PostController do
 
   def index(conn, _params) do
     posts = Blog.list_posts()
-    render(conn, "index.json", posts: posts)
+    json conn, posts: posts
   end
 
   def create(conn, %{"post" => post_params}) do
     with {:ok, %Post{} = post} <- Blog.create_post(post_params) do
       conn
-
+      |> json(post: post)
     end
   end
 
   def show(conn, %{"id" => id}) do
     post = Blog.get_post!(id)
-    render(conn, "show.json", post: post)
+    json conn, post: post
   end
 
   def update(conn, %{"id" => id, "post" => post_params}) do
     post = Blog.get_post!(id)
 
     with {:ok, %Post{} = post} <- Blog.update_post(post, post_params) do
-      render(conn, "show.json", post: post)
+      json conn, post: post
     end
   end
 
