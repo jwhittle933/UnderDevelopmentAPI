@@ -6,7 +6,9 @@ defmodule Api.Accounts.User do
     field :email, :string
     field :name, :string
     field :password, :string
+    field :admin, :boolean
     has_many :posts, Api.Blog.Post
+    has_many :comments, Api.Blog.Comment
 
     timestamps()
   end
