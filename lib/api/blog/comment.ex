@@ -8,6 +8,7 @@ defmodule Api.Blog.Comment do
     field :comment, :string
     field :name, :string
     belongs_to :user, Api.Accounts.User
+    belongs_to :post, Api.Blog.Post
 
     timestamps()
   end

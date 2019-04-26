@@ -9,6 +9,7 @@ defmodule Api.Blog.Post do
     field :title, :string
     field :featured_image, :string
     belongs_to :user, Api.Accounts.User
+    has_many :comments, Api.Blog.Comment
 
     timestamps()
   end

@@ -5,6 +5,7 @@ defmodule Api.Repo.Migrations.CreatePosts do
     create table(:posts) do
       add :title, :string
       add :body, :string
+      add :featured_image, :string, default: ""
       add :user_id, references(:users)
 
       timestamps()
