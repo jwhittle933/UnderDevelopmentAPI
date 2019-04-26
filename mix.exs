@@ -44,7 +44,9 @@ defmodule Api.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:poison, "~> 3.1"},
-      {:httpoison, "~> 1.4"}
+      {:httpoison, "~> 1.4"},
+      {:comeonin, "~> 5.1.1"},
+      {:bcrypt_elixir, "~> 2.0"}
     ]
   end
 

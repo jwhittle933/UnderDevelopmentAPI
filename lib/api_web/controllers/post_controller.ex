@@ -14,7 +14,9 @@ defmodule ApiWeb.PostController do
   def create(conn, %{"post" => post_params}) do
     with {:ok, %Post{} = post} <- Blog.create_post(post_params) do
       conn
-      |> json(post: post)
+      |> put_status(:created)
+      |> put_resp_header("content-type", "application/json")
+      |> send_resp(200, post: post)
     end
   end
 

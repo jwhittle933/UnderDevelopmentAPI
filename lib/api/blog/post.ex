@@ -7,6 +7,7 @@ defmodule Api.Blog.Post do
   schema "posts" do
     field :body, :string
     field :title, :string
+    field :featured_image, :string
     belongs_to :user, Api.Accounts.User
 
     timestamps()
@@ -15,7 +16,7 @@ defmodule Api.Blog.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :body])
+    |> cast(attrs, [:title, :body, :featured_image])
     |> validate_required([:title, :body])
   end
 end

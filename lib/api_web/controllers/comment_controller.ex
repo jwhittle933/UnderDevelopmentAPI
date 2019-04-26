@@ -15,7 +15,7 @@ defmodule ApiWeb.CommentController do
     with {:ok, %Comment{} = comment} <- Blog.create_comment(comment_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.comment_path(conn, :show, comment))
+      |> put_resp_header("content-type", "application/json")
       |> send_resp(200, comment: comment)
     end
   end

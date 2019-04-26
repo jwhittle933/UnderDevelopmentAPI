@@ -5,7 +5,6 @@ defmodule Api.Accounts do
 
   import Ecto.Query, warn: false
   alias Api.Repo
-
   alias Api.Accounts.User
 
   @doc """
@@ -54,6 +53,8 @@ defmodule Api.Accounts do
     |> User.changeset(attrs)
     |> Repo.insert()
   end
+
+
 
   @doc """
   Updates a user.

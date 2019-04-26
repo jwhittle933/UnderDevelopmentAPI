@@ -13,14 +13,16 @@ defmodule ApiWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", ApiWeb do
-    pipe_through :browser
 
+  scope "/api", ApiWeb do
+    pipe_through :api
+
+    post "/login", AuthController, :login
+    post "/logout", AuthController, :logout
+
+    resources "/users", UserController
+    resources "/comments", CommentController
+    resources "/posts", PostsController
 
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", ApiWeb do
-  #   pipe_through :api
-  # end
 end
