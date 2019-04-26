@@ -8,7 +8,7 @@ defmodule ApiWeb.UserController do
 
   def index(conn, _params) do
     users = Accounts.list_users()
-    json conn, users: users
+    json conn, %{users: users} #json expects a struct for response
   end
 
   def create(conn, %{"user" => user_params}) do
