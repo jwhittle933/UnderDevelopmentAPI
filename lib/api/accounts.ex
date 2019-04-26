@@ -4,6 +4,9 @@ defmodule Api.Accounts do
   """
 
   import Ecto.Query, warn: false
+  alias Ecto.Changeset
+  alias Bcrypt
+  alias Comeonin
   alias Api.Repo
 
   alias Api.Accounts.User
@@ -54,6 +57,13 @@ defmodule Api.Accounts do
     |> User.changeset(attrs)
     |> Repo.insert()
   end
+
+  defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+    Changeset.change(changeset, password: Bcrypt.add_hash(password))
+  end
+
+  defp put_pass_hash(changeset), do: changeset
+
 
   @doc """
   Updates a user.

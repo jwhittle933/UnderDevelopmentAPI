@@ -7,7 +7,8 @@ defmodule Api.Accounts.User do
   schema "users" do
     field :email, :string
     field :name, :string
-    field :password, :string
+    field :password, :string, virtual: true
+    field :password_hash, :string
     field :admin, :boolean
     has_many :posts, Api.Blog.Post
     has_many :comments, Api.Blog.Comment
@@ -19,6 +20,6 @@ defmodule Api.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:name, :email, :password, :admin])
-    |> validate_required([:name, :email, :password, :admin])
+    |> validate_required([:name, :email, :password_hash, :admin])
   end
 end
