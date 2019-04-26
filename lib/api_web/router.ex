@@ -15,12 +15,17 @@ defmodule ApiWeb.Router do
 
   scope "/", ApiWeb do
     pipe_through :browser
-
-
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ApiWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", ApiWeb do
+    pipe_through :api
+
+    post "/login", AuthController, :login
+    post "/logout", AuthController, :logout
+
+    resources "/users", UserController
+    resources "/comments", CommentController
+    resources "/posts", PostsController
+
+  end
 end
