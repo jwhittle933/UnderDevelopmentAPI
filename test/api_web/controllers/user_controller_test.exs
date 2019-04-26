@@ -7,14 +7,16 @@ defmodule ApiWeb.UserControllerTest do
   @create_attrs %{
     email: "some email",
     name: "some name",
-    password: "some password"
+    password: "some password",
+    admin: true
   }
   @update_attrs %{
     email: "some updated email",
     name: "some updated name",
-    password: "some updated password"
+    password: "some updated password",
+    admin: false
   }
-  @invalid_attrs %{email: nil, name: nil, password: nil}
+  @invalid_attrs %{email: nil, name: nil, password: nil, admin: nil}
 
   def fixture(:user) do
     {:ok, user} = Accounts.create_user(@create_attrs)
