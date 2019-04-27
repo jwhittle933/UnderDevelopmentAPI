@@ -106,27 +106,6 @@ jw_posts = [
   Ecto.build_assoc(jw, :posts, post) |> Repo.insert!
 end)
 
-# comments = [
-#   %{
-#     comment: "Hooray!",
-#     name: "Joe Joe Fo Sho"
-#   },
-#   %{
-#     comment: "What a great Post",
-#     name: "Paul Schwifty"
-#   },
-#   %{
-#     comment: "I don't aggree. Wanna fight about it?",
-#     name: "Woke-a-moke"
-#   }
-# ]
-
-# {:ok, posts} = Repo.all(Post)
-# Enum.each(posts, fn(post) -> 
-#   Enum.each(comments, fn(comment) -> 
-#     Ecto.build_assoc(post, :comments, comment) |>Repo.insert!
-#   end)
-# end)
 
 
 
