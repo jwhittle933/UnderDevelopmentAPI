@@ -9,13 +9,36 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+alias Api.Accounts
+alias Api.Blog
 
-Api.Repo.delete_all(Api.Accounts.User)
-Api.Repo.delete_all(Api.Blog.Post)
-Api.Repo.delete_all(Api.Accounts.Comment)
 
-admin_user = %Api.Accounts.User{name: "admin", email: "admin@admin.com", password: "administrator", admin: true}
-jw = %Api.Accounts.User{name: "Jonathan Whittle", email: "jonathan.m.whittle@gmail.com", password: "jwhittle", admin: true}
+account_data = [
+  %{
+    name: "admin", 
+    email: "admin@admin.com", 
+    password: "administrator", 
+    admin: true
+  },
+  %{
+    name: "Jonathan Whittle", 
+    email: "jonathan.m.whittle@gmail.com", 
+    password: "jwhittle", 
+    admin: true
+  }
+]
 
-Api.Repo.insert!(admin_user)
-Api.Repo.insert!(jw)
+comment_data = [
+  %{
+    comment: "What a wonderful post!"
+  }
+]
+
+Api.Repo.delete_all(Accounts.User)
+Api.Repo.delete_all(Blog.Post)
+Api.Repo.delete_all(Blog.Comment)
+
+Enum.each(account_data, fn(data) ->
+  Accounts.create_user(data)
+end)
+

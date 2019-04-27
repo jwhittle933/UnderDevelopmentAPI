@@ -22,14 +22,14 @@ defmodule ApiWeb.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
-    json conn, user: user
+    json conn, %{user: user}
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Accounts.get_user!(id)
 
     with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
-      json conn, user: user
+      json conn, %{user: user}
     end
   end
 
