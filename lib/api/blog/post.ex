@@ -8,6 +8,7 @@ defmodule Api.Blog.Post do
     field :body, :string
     field :title, :string
     field :featured_image, :string
+    field :visible, :boolean
     belongs_to :user, Api.Accounts.User
     has_many :comments, Api.Blog.Comment
 
@@ -17,7 +18,7 @@ defmodule Api.Blog.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :body, :featured_image])
-    |> validate_required([:title, :body])
+    |> cast(attrs, [:title, :body, :featured_image, :visible])
+    |> validate_required([:title, :body, :visible])
   end
 end
