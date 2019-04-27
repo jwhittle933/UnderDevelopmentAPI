@@ -14,14 +14,14 @@ alias Api.Repo
 alias Api.Accounts
 alias Api.Blog.{Post, Comment}
 
-@doc """
+"""
   Repo.delete for clearing existing data and repopulating
 """
-Repo.delete_all(Accounts.User)
 Repo.delete_all(Post)
 Repo.delete_all(Comment)
+Repo.delete_all(Accounts.User)
 
-@doc """
+"""
   Destructure {:ok, ...} for Ecto.build_assoc/3
   Accounts.create_user for hashing password
 """
@@ -39,6 +39,10 @@ Repo.delete_all(Comment)
   admin: true
 } |> Accounts.create_user
 
+"""
+  Lists of posts |> Enum.each
+  Ecto.build_assoc/3 |> Repo.insert!/1
+"""
 jw_posts = [
   %{
     body: "Lalalalal",
@@ -56,7 +60,7 @@ jw_posts = [
     featured_image: "https://s3.aws.com/featuredImage/12",
   }
 ] |> Enum.each(fn(post) -> 
-  Ecto.build_assoc(jw, :posts, post) |> Repo.insert!(post)
+  Ecto.build_assoc(jw, :posts, post) |> Repo.insert!
 end)
 
 
