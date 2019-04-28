@@ -13,9 +13,9 @@ defmodule ApiWeb.Plugs.Authenticate do
     else
       :error ->
         conn
-        |> put_status(:not_allowed)
+        |> put_status(:unauthorized)
         |> put_resp_header("content-type", "application/json")
-        |> send_resp(401, %{code: 401, message: "Unauthorized user."})
+        |> send_resp(401, %{code: 401, message: "Unauthorized"})
     end
   end
 
