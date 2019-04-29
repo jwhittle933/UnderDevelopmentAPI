@@ -4,6 +4,7 @@ defmodule Api.Application do
   @moduledoc false
 
   use Application
+  require Logger
 
   def start(_type, _args) do
     # List all child processes to be supervised
@@ -15,6 +16,8 @@ defmodule Api.Application do
       # Starts a worker by calling: Api.Worker.start_link(arg)
       # {Api.Worker, arg},
     ]
+
+    Logger.info("Starting the application...")
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

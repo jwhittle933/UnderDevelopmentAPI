@@ -11,7 +11,7 @@ defmodule ApiWeb.AuthController do
     login view. 
     login/1 checks for session regardless
   """
-  def login(conn, %{email: email, password: password}) do
+  def login(conn, %{"email" => email, "password" => password}) do
     with {:ok, user} <- Accounts.get_user_by!(email),
       true <- Bcrypt.verify_pass(password, user.password_hash) do
         # If user is already logged in: configure_session(conn, renew: true)
