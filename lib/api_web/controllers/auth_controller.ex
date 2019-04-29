@@ -11,11 +11,6 @@ defmodule ApiWeb.AuthController do
     login view. 
     login/1 checks for session regardless
   """
-  def login(conn, %{email: email, password: password}) when is_nil(password) or is_nil(email) do
-    conn
-    |> insufficient_data
-  end
-
   def login(conn, %{email: email, password: password}) do
     with {:ok, user} <- Accounts.get_user_by!(email),
       true <- Bcrypt.verify_pass(password, user.password_hash) do
@@ -28,13 +23,17 @@ defmodule ApiWeb.AuthController do
     end
   end
  
+  def login(conn, _params), do: conn |> insufficient_data
   
   defp add_pass(user, password) do
     Map.put(user, :password, password)
   end
 
   def logout(conn, _params) do
-    # Plug.Conn.clear_session/1
+    conn
+    |> Plug.Conn.configure_session(drop: true)
+    |> assign(:current_user_id, nil)
+    |> assign(:user_signed_in?, false)
   end
 
   defp insufficient_data(conn) do
