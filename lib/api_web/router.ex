@@ -19,13 +19,32 @@ defmodule ApiWeb.Router do
 
   scope "/api", ApiWeb do
     pipe_through :api
-
-    post "/login", AuthController, :login
-    post "/logout", AuthController, :logout
-
-    resources "/users", UserController
+    
+    @doc """
+      api requests to /api/comments or /api/posts @ :index, :show
+      need no auth. This is for general readership
+    """
     resources "/comments", CommentController
-    resources "/posts", PostsController
+    resources "/posts", PostsController, only: [:index, :show]
+
+    @doc """
+      Scope /api/auth for user login/logout
+    """
+    scope "/auth", ApiWeb do
+      post "/login", AuthController, :login
+      post "/logout", AuthController, :logout
+    end
+
+    @doc """
+      Scope /api/users for authorized user content creation
+    """
+    scope "/users", ApiWeb do
+      # plug :auth
+      resources "/", UserController
+      resources "/posts", PostsController, only: [:create, :update, :delete]
+      resources "/drafts", DraftController
+    end
+
 
   end
 end

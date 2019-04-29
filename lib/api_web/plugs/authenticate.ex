@@ -2,8 +2,7 @@ defmodule ApiWeb.Plugs.Authenticate do
   import Plug.Conn
   alias Api.Accounts
 
-  def init(_params) do
-  end
+  def init(params), do: params
 
   def call(conn, _params) do
     with {:ok, current_user_id} <- Plug.Conn.get_session(conn, :current_user_id),
@@ -16,6 +15,7 @@ defmodule ApiWeb.Plugs.Authenticate do
         |> put_status(:unauthorized)
         |> put_resp_header("content-type", "application/json")
         |> send_resp(401, %{code: 401, message: "Unauthorized"})
+        |> halt
     end
   end
 
