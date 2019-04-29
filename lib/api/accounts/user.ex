@@ -13,7 +13,7 @@ defmodule Api.Accounts.User do
     field :password_hash, :string
     field :admin, :boolean
     has_many :posts, Api.Blog.Post
-    has_many :comments, Api.Blog.Comment
+    has_many :comments, Api.Blog.Comment # subject to change
 
     timestamps()
   end
@@ -29,7 +29,8 @@ defmodule Api.Accounts.User do
   end
 
 
-  defp hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+  defp hash(%Ecto.Changeset{valid?: true, changes: 
+    %{password: password}} = changeset) do
     # Bycrypt.add_hash/1 intakes string returns a map 
     %{password_hash: password_hash} = Bcrypt.add_hash(password)
     change(changeset, password_hash: password_hash)

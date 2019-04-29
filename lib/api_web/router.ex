@@ -13,6 +13,9 @@ defmodule ApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  # Although technically scopes can also be nested (just like resources), 
+  # the use of nested scopes is generally discouraged because 
+  # it can sometimes make our code confusing and less clear.
 
   scope "/api", ApiWeb do
     pipe_through :api
