@@ -1,4 +1,4 @@
-defmodule ApiWeb.Plugs.Authenticate do 
+defmodule ApiWeb.Plug.Authenticate do 
   import Plug.Conn
   alias Api.Accounts
 

@@ -1,5 +1,6 @@
-defmodule ApiWeb.Plugs.Logger do
+defmodule ApiWeb.Plug.Logger do
   import Plug.Conn
+  import Plug.Logger
 
   def init(options), do: options
 
