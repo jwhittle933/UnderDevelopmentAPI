@@ -33,6 +33,7 @@ defmodule ApiWeb.CommentControllerTest do
         |> get_resp_body
 
     assert %{"comment" => comment} = resp
+    assert [%Api.Blog.Comment{}] = resp["comment"]
     end
   end
 
