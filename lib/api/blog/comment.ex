@@ -2,7 +2,7 @@ defmodule Api.Blog.Comment do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:comment, :name, :user, :post]}
+  @derive {Jason.Encoder, only: [:comment, :name, :user_id, :post_id]}
 
   schema "comments" do
     field :comment, :string

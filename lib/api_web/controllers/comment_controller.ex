@@ -8,7 +8,7 @@ defmodule ApiWeb.CommentController do
 
   def index(conn, _params) do
     comment = Blog.list_comment()
-    json conn, comment: comment
+    json conn, %{comment: comment}
   end
 
   def create(conn, %{"comment" => comment_params}) do
