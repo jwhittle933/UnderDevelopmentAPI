@@ -4,6 +4,7 @@ defmodule Api.Blog do
   """
 
   import Ecto.Query, warn: false
+  import Ecto.Changeset
   alias Api.Repo
 
   alias Api.Blog.Post
@@ -131,7 +132,7 @@ defmodule Api.Blog do
       ** (Ecto.NoResultsError)
 
   """
-  def get_comment!(id), do: Repo.get!(Comment, id)
+  def get_comment!(id), do: Repo.get(Comment, id)
 
   @doc """
   Creates a comment.
@@ -145,10 +146,17 @@ defmodule Api.Blog do
       {:error, %Ecto.Changeset{}}
 
   """
+  # insert! submits fine, but throws error on fail
+  # insert throw UndefinedError
   def create_comment(attrs \\ %{}) do
     %Comment{}
     |> Comment.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert
+  end
+
+  # for testing
+  defp strip_macro({:ok, struct})do
+    struct
   end
 
   @doc """

@@ -13,4 +13,12 @@ defmodule ApiWeb.ErrorView do
   def template_not_found(template, _assigns) do
     Phoenix.Controller.status_message_from_template(template)
   end
+
+  def render("errors.json", %{changeset: changeset}) do
+    %{
+      status: "failure",
+      errors: Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
+    }
+  end
+
 end

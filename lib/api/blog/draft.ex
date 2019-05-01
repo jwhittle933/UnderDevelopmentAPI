@@ -2,7 +2,7 @@ defmodule Api.Blog.Draft do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:title, :body, :featured_image]}
+  @derive {Jason.Encoder, only: [:id, :title, :body, :featured_image]}
 
   schema "drafts" do
     field :body, :string

@@ -22,14 +22,14 @@ defmodule ApiWeb.PostController do
 
   def show(conn, %{"id" => id}) do
     post = Blog.get_post!(id)
-    json conn, post: post
+    json conn, %{post: post}
   end
 
   def update(conn, %{"id" => id, "post" => post_params}) do
     post = Blog.get_post!(id)
 
     with {:ok, %Post{} = post} <- Blog.update_post(post, post_params) do
-      json conn, post: post
+      json conn, %{post: post}
     end
   end
 
