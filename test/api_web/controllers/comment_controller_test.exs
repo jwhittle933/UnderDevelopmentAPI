@@ -47,6 +47,9 @@ defmodule ApiWeb.CommentControllerTest do
       |> post(Routes.comment_path(conn, :create), comment: @create_attrs)
       |> get_resp_body
 
+      IO.puts "Resp from :create"
+      IO.inspect resp
+
       %{"id" => id, "comment" => comment, "name" => name, "post_id" => post_id} = resp["comment"]
       assert comment == @create_attrs[:comment]
       assert name == @create_attrs[:name]
@@ -57,18 +60,34 @@ defmodule ApiWeb.CommentControllerTest do
       |> get(Routes.comment_path(conn, :show, id))
       |> get_resp_body
 
+      IO.puts "Resp from :show"
+      IO.inspect resp
+
       assert %{
-               "id" => _,
-               "comment" => "some comment",
-               "name" => "some name",
-               "post_id" => _
-             } = resp["comment"]
+        "id" => _,
+        "comment" => "some comment",
+        "name" => "some name",
+        "post_id" => _
+      } = resp["comment"]
     end
 
-    # test "renders errors when data is invalid", %{conn: conn} do
-    #   conn = post(conn, Routes.comment_path(conn, :create), comment: @invalid_attrs)
-    #   # assert json_response(conn, 422)["errors"] != %{}
-    # end
+    test "renders errors when data is invalid", %{conn: conn} do
+      {:ok, resp} =
+      conn
+      |> post(Routes.comment_path(conn, :create), comment: @invalid_attrs)
+      |> get_resp_body
+  
+      {:ok, errors} = resp["errors"] |> Poison.decode
+      IO.puts "Errors:"
+      IO.inspect errors
+
+      assert %{
+        "comment" => "can't be blank",
+        "name" => "can't be blank",
+        "post_id" => "can't be blank"
+      } = errors
+
+    end
   end
 
   # describe "update comment" do

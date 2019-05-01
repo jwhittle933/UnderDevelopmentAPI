@@ -17,6 +17,6 @@ defmodule Api.Blog.Comment do
   def changeset(comment, attrs) do
     comment
     |> cast(attrs, [:name, :comment, :post_id])
-    |> validate_required([:name, :comment, :post_id])
+    |> validate_required([:comment, :name, :post_id])
   end
 end
