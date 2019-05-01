@@ -4,6 +4,7 @@ defmodule Api.Blog do
   """
 
   import Ecto.Query, warn: false
+  import Ecto.Changeset
   alias Api.Repo
 
   alias Api.Blog.Post
@@ -148,7 +149,7 @@ defmodule Api.Blog do
   def create_comment(attrs \\ %{}) do
     %Comment{}
     |> Comment.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert!
   end
 
   @doc """

@@ -4,7 +4,7 @@ defmodule ApiWeb.CommentController do
   alias Api.Blog
   alias Api.Blog.Comment
 
-  action_fallback ApiWeb.FallbackController
+  # action_fallback ApiWeb.FallbackController
 
   def index(conn, _params) do
     comment = Blog.list_comment()
@@ -12,24 +12,38 @@ defmodule ApiWeb.CommentController do
   end
 
   def create(conn, %{"comment" => comment_params}) do
-    with {:ok, %Comment{} = comment} <- Blog.create_comment(comment_params) do
+    with %Comment{} = comment <- Blog.create_comment(comment_params) do
       conn
-      |> put_status(:created)
+      |> put_status(:ok)
       |> put_resp_header("content-type", "application/json")
-      |> send_resp(200, comment: comment)
+      |> json(%{comment: comment})
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        IO.inspect changeset
+        conn 
+        |> put_status(:unprocessable_entity)
+        |> put_resp_header("content-type", "application/json")
+        |> json(%{changeset: changeset, comment: comment_params})
+      _ ->
+        conn 
+        |> put_status(:not_found)
+        |> json(%{msg: "Something went wrong"})
     end
   end
 
   def show(conn, %{"id" => id}) do
     comment = Blog.get_comment!(id)
-    json conn, comment: comment
+    conn
+    |> put_status(:ok)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{comment: comment})
   end
 
   def update(conn, %{"id" => id, "comment" => comment_params}) do
     comment = Blog.get_comment!(id)
 
     with {:ok, %Comment{} = comment} <- Blog.update_comment(comment, comment_params) do
-      json conn, comment: comment
+      json conn, %{comment: comment}
     end
   end
 

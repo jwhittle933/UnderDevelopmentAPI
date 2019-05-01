@@ -1,13 +1,13 @@
 defmodule Api.Blog.Comment do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Api.Repo
 
-  @derive {Jason.Encoder, only: [:comment, :name, :user_id, :post_id]}
+  @derive {Jason.Encoder, only: [:id, :comment, :name, :post_id]}
 
   schema "comments" do
     field :comment, :string
     field :name, :string
-    belongs_to :user, Api.Accounts.User # subject to change
     belongs_to :post, Api.Blog.Post
 
     timestamps()
@@ -16,9 +16,7 @@ defmodule Api.Blog.Comment do
   @doc false
   def changeset(comment, attrs) do
     comment
-    |> cast(attrs, [:name, :comment])
-    |> cast_assoc(:user)
-    |> cast_assoc(:post)
-    |> validate_required([:name, :comment, :user, :post])
+    |> cast(attrs, [:name, :comment, :post_id])
+    |> validate_required([:name, :comment, :post_id])
   end
 end

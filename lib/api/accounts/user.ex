@@ -4,7 +4,7 @@ defmodule Api.Accounts.User do
 
   alias Bcrypt
 
-  @derive {Jason.Encoder, only: [:email, :name, :password_hash, :admin]}
+  @derive {Jason.Encoder, only: [:id, :email, :name, :password_hash, :admin]}
 
   schema "users" do
     field :email, :string

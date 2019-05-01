@@ -8,11 +8,13 @@ defmodule ApiWeb.CommentControllerTest do
 
   @create_attrs %{
     comment: "some comment",
-    name: "some name"
+    name: "some name",
+    post_id: 25
   }
   @update_attrs %{
     comment: "some updated comment",
-    name: "some updated name"
+    name: "some updated name",
+    post_id: 25
   }
   @invalid_attrs %{comment: nil, name: nil}
 
@@ -32,30 +34,42 @@ defmodule ApiWeb.CommentControllerTest do
         |> get(Routes.comment_path(conn, :index))
         |> get_resp_body
 
-    assert %{"comment" => comment} = resp
-    assert [%Api.Blog.Comment{}] = resp["comment"]
+      assert %{"comment" => comment} = resp
+      [head | _] = resp["comment"]
+      assert %{"comment" => comment, "name" => name} = head
     end
   end
 
-  # describe "create comment" do
-  #   test "renders comment when data is valid", %{conn: conn} do
-  #     conn = post(conn, Routes.comment_path(conn, :create), comment: @create_attrs)
-  #     assert %{"id" => id} = json_response(conn, 201)["data"]
+  describe "create comment" do
+    test "renders comment when data is valid", %{conn: conn} do
+      {:ok, resp} = 
+      conn
+      |> post(Routes.comment_path(conn, :create), comment: @create_attrs)
+      |> get_resp_body
 
-  #     conn = get(conn, Routes.comment_path(conn, :show, id))
+      %{"id" => id, "comment" => comment, "name" => name, "post_id" => post_id} = resp["comment"]
+      assert comment == @create_attrs[:comment]
+      assert name == @create_attrs[:name]
+      assert post_id == @create_attrs[:post_id]
 
-  #     assert %{
-  #              "id" => id,
-  #              "comment" => "some comment",
-  #              "name" => "some name"
-  #            } = json_response(conn, 200)["data"]
-  #   end
+      {:ok, resp} =
+      conn
+      |> get(Routes.comment_path(conn, :show, id))
+      |> get_resp_body
 
-  #   test "renders errors when data is invalid", %{conn: conn} do
-  #     conn = post(conn, Routes.comment_path(conn, :create), comment: @invalid_attrs)
-  #     assert json_response(conn, 422)["errors"] != %{}
-  #   end
-  # end
+      assert %{
+               "id" => _,
+               "comment" => "some comment",
+               "name" => "some name",
+               "post_id" => _
+             } = resp["comment"]
+    end
+
+    test "renders errors when data is invalid", %{conn: conn} do
+      conn = post(conn, Routes.comment_path(conn, :create), comment: @invalid_attrs)
+      # assert json_response(conn, 422)["errors"] != %{}
+    end
+  end
 
   # describe "update comment" do
   #   setup [:create_comment]
