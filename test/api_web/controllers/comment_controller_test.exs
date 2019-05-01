@@ -65,10 +65,10 @@ defmodule ApiWeb.CommentControllerTest do
              } = resp["comment"]
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.comment_path(conn, :create), comment: @invalid_attrs)
-      # assert json_response(conn, 422)["errors"] != %{}
-    end
+    # test "renders errors when data is invalid", %{conn: conn} do
+    #   conn = post(conn, Routes.comment_path(conn, :create), comment: @invalid_attrs)
+    #   # assert json_response(conn, 422)["errors"] != %{}
+    # end
   end
 
   # describe "update comment" do
