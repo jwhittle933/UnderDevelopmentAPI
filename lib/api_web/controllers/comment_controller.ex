@@ -43,6 +43,16 @@ defmodule ApiWeb.CommentController do
 
     with {:ok, %Comment{} = comment} <- Blog.update_comment(comment, comment_params) do
       json conn, %{comment: comment}
+    else
+      {:error, %Ecto.Changeset{} = %{errors: errors}} ->
+        resp = get_errors(%{}, errors)
+        conn 
+        |> put_status(:unprocessable_entity)
+        |> put_resp_header("content-type", "application/json")
+        |> json(%{errors: resp})
+      _ ->  
+        conn 
+        |> put_status(:not_found) 
     end
   end
 
