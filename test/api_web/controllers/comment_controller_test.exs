@@ -47,9 +47,6 @@ defmodule ApiWeb.CommentControllerTest do
       |> post(Routes.comment_path(conn, :create), comment: @create_attrs)
       |> get_resp_body
 
-      IO.puts "Resp from :create"
-      IO.inspect resp
-
       %{"id" => id, "comment" => comment, "name" => name, "post_id" => post_id} = resp["comment"]
       assert comment == @create_attrs[:comment]
       assert name == @create_attrs[:name]
@@ -60,9 +57,6 @@ defmodule ApiWeb.CommentControllerTest do
       |> get(Routes.comment_path(conn, :show, id))
       |> get_resp_body
 
-      IO.puts "Resp from :show"
-      IO.inspect resp
-
       assert %{
         "id" => _,
         "comment" => "some comment",
@@ -71,15 +65,13 @@ defmodule ApiWeb.CommentControllerTest do
       } = resp["comment"]
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
+    test "sends errors when data is invalid", %{conn: conn} do
       {:ok, resp} =
       conn
       |> post(Routes.comment_path(conn, :create), comment: @invalid_attrs)
       |> get_resp_body
   
       {:ok, errors} = resp["errors"] |> Poison.decode
-      IO.puts "Errors:"
-      IO.inspect errors
 
       assert %{
         "comment" => "can't be blank",
@@ -90,27 +82,44 @@ defmodule ApiWeb.CommentControllerTest do
     end
   end
 
-  # describe "update comment" do
-  #   setup [:create_comment]
+  describe "update comment" do
+    test "renders comment when data is valid", %{conn: conn} do
+      with {:ok, %Blog.Comment{id: id} = comment} <- Blog.create_comment(@create_attrs) do
+        
+        {:ok, resp} =
+        conn 
+        |> put(Routes.comment_path(conn, :update, comment), comment: @update_attrs)
+        |> get_resp_body
+        
+        {:ok, resp} =
+        conn 
+        |> get(Routes.comment_path(conn, :show, id))
+        |> get_resp_body
+        
+        assert %{
+          "id" => _,
+          "comment" => "some updated comment",
+          "name" => "some updated name"
+          } = resp["comment"]
+      end
+    end
 
-  #   test "renders comment when data is valid", %{conn: conn, comment: %Comment{id: id} = comment} do
-  #     conn = put(conn, Routes.comment_path(conn, :update, comment), comment: @update_attrs)
-  #     assert %{"id" => ^id} = json_response(conn, 200)["data"]
+    test "sends errors when data is invalid", %{conn: conn} do
+      with {:ok, %Blog.Comment{id: id} = comment} <- Blog.create_comment(@create_attrs) do
+        {:ok, resp} = 
+        conn 
+        |> put(Routes.comment_path(conn, :update, comment), comment: @invalid_attrs)
+        |> get_resp_body
 
-  #     conn = get(conn, Routes.comment_path(conn, :show, id))
+        {:ok, errors} = resp["errors"] |> Poison.decode
 
-  #     assert %{
-  #              "id" => id,
-  #              "comment" => "some updated comment",
-  #              "name" => "some updated name"
-  #            } = json_response(conn, 200)["data"]
-  #   end
-
-  #   test "renders errors when data is invalid", %{conn: conn, comment: comment} do
-  #     conn = put(conn, Routes.comment_path(conn, :update, comment), comment: @invalid_attrs)
-  #     assert json_response(conn, 422)["errors"] != %{}
-  #   end
-  # end
+        assert %{
+          "comment" => "can't be blank",
+          "name" => "can't be blank"
+        } == errors
+      end
+    end
+  end
 
   # describe "delete comment" do
   #   setup [:create_comment]
@@ -125,9 +134,6 @@ defmodule ApiWeb.CommentControllerTest do
   #   end
   # end
 
-  defp is_comments?(resp) do
-    # 
-  end
 
   defp create_comment(_) do
     comment = fixture(:comment)

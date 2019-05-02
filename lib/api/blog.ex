@@ -154,10 +154,6 @@ defmodule Api.Blog do
     |> Repo.insert
   end
 
-  # for testing
-  defp strip_macro({:ok, struct})do
-    struct
-  end
 
   @doc """
   Updates a comment.

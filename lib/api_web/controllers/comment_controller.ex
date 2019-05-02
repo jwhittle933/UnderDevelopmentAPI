@@ -25,8 +25,8 @@ defmodule ApiWeb.CommentController do
         |> json(%{errors: resp})
       _ ->
         conn 
-        |> put_status(:not_found)
-        |> json(%{msg: "Something went wrong"})
+        |> put_status(:internal_server_error)
+        |> json(%{msg: "Server Error"})
     end
   end
 
@@ -43,6 +43,17 @@ defmodule ApiWeb.CommentController do
 
     with {:ok, %Comment{} = comment} <- Blog.update_comment(comment, comment_params) do
       json conn, %{comment: comment}
+    else
+      {:error, %Ecto.Changeset{} = %{errors: errors}} ->
+        resp = get_errors(%{}, errors)
+        conn 
+        |> put_status(:unprocessable_entity)
+        |> put_resp_header("content-type", "application/json")
+        |> json(%{errors: resp})
+      _ ->  
+        conn 
+        |> put_status(:internal_server_error) 
+        |> json %{msg: "Server Error"}
     end
   end
 
@@ -52,17 +63,6 @@ defmodule ApiWeb.CommentController do
     with {:ok, %Comment{}} <- Blog.delete_comment(comment) do
       send_resp(conn, :no_content, "")
     end
-  end
-
-  defp get_errors(acc, [head | tail]) do
-    {atom, value} = head
-    {msg, _} = value
-    Map.put(acc, Atom.to_string(atom), msg)
-    |> get_errors(tail)
-  end
-
-  defp get_errors(acc, []) do
-    Poison.encode!(acc)
   end
 
 end
