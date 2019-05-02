@@ -25,8 +25,8 @@ defmodule ApiWeb.CommentController do
         |> json(%{errors: resp})
       _ ->
         conn 
-        |> put_status(:not_found)
-        |> json(%{msg: "Something went wrong"})
+        |> put_status(:internal_server_error)
+        |> json(%{msg: "Server Error"})
     end
   end
 
@@ -52,7 +52,8 @@ defmodule ApiWeb.CommentController do
         |> json(%{errors: resp})
       _ ->  
         conn 
-        |> put_status(:not_found) 
+        |> put_status(:internal_server_error) 
+        |> json %{msg: "Server Error"}
     end
   end
 
