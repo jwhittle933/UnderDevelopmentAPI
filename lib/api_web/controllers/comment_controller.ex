@@ -31,11 +31,17 @@ defmodule ApiWeb.CommentController do
   end
 
   def show(conn, %{"id" => id}) do
-    comment = Blog.get_comment!(id)
-    conn
-    |> put_status(:ok)
-    |> put_resp_header("content-type", "application/json")
-    |> json(%{comment: comment})
+    with %Blog.Comment{} = comment <- Blog.get_comment!(id) do
+      conn
+      |> put_status(:ok)
+      |> put_resp_header("content-type", "application/json")
+      |> json(%{comment: comment})
+    else
+      _ ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{msg: "Not found."})
+    end
   end
 
   def update(conn, %{"id" => id, "comment" => comment_params}) do

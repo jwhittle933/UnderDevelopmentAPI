@@ -121,18 +121,21 @@ defmodule ApiWeb.CommentControllerTest do
     end
   end
 
-  # describe "delete comment" do
-  #   setup [:create_comment]
+  describe "delete comment" do
+    test "deletes chosen comment", %{conn: conn} do
+      {:ok, %Blog.Comment{id: id} = comment} = @create_attrs |> Blog.create_comment
+      conn = delete(conn, Routes.comment_path(conn, :delete, comment))
+      assert response(conn, 204)
 
-  #   test "deletes chosen comment", %{conn: conn, comment: comment} do
-  #     conn = delete(conn, Routes.comment_path(conn, :delete, comment))
-  #     assert response(conn, 204)
+      {:ok, resp} = 
+      conn
+      |> get(Routes.comment_path(conn, :show, id))
+      |> Map.fetch(:status)
 
-  #     assert_error_sent 404, fn ->
-  #       get(conn, Routes.comment_path(conn, :show, comment))
-  #     end
-  #   end
-  # end
+      assert resp == 404
+
+    end
+  end
 
 
   defp create_comment(_) do
