@@ -6,7 +6,8 @@ defmodule Api.Repo.Migrations.CreateUsers do
       add :name, :string
       add :email, :string
       add :password_hash, :string
-
+      add :admin, :boolean
+      
       timestamps()
     end
 

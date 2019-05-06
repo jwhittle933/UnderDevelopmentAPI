@@ -110,7 +110,7 @@ defmodule Api.Blog do
 
   ## Examples
 
-      iex> list_comment()
+      iex> list_comment(
       [%Comment{}, ...]
 
   """
@@ -146,8 +146,6 @@ defmodule Api.Blog do
       {:error, %Ecto.Changeset{}}
 
   """
-  # insert! submits fine, but throws error on fail
-  # insert throw UndefinedError
   def create_comment(attrs \\ %{}) do
     %Comment{}
     |> Comment.changeset(attrs)

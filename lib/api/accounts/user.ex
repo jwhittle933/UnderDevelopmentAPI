@@ -13,7 +13,7 @@ defmodule Api.Accounts.User do
     field :password_hash, :string
     field :admin, :boolean
     has_many :posts, Api.Blog.Post
-    has_many :comments, Api.Blog.Comment # subject to change
+    # has_many :comments, Api.Blog.Comment
 
     timestamps()
   end
