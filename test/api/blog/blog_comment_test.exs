@@ -36,38 +36,35 @@ defmodule Api.CommentTest do
   }
   @invalid_attrs %{comment: nil, name: nil}
 
-  defp fixture() do
-    {:ok, setup} = @fixture |> Repo.insert
+  defp fixture(context) do
+    {:ok, user} = @fixture |> Repo.insert
 
-    setup
+    post = List.first(user.posts)
+    comments = post.comments
+
+    #cleanup
+    on_exit fn ->
+      IO.puts "Exiting Process: #{inspect self()}"
+    end
+
+    # merge metadata into context
+    [user: user, post: post, comments: comments]
   end
 
   describe "comment" do
 
-    setup do
-      {:ok, user} = @fixture |> Repo.insert
-
-      post = List.first(user.posts)
-      comments = post.comments
-
-      #cleanup
-      on_exit fn ->
-        IO.puts "Exiting Process: #{inspect self()}"
-      end
-
-      # merge metadata into context
-      [user: user, post: post, comments: comments]
-
-    end
+    setup :fixture
 
     test "list_comment/0 returns all comment", context do
       assert Blog.list_comment() == context[:comments]
     end
 
-    # test "get_comment!/1 returns the comment with given id" do
-    #   comment = comment_fixture()
-    #   assert Blog.get_comment!(comment.id) == comment
-    # end
+    test "get_comment!/1 returns the comment with given id", context do
+      comment = List.first(context[:comments])
+      assert comment == Blog.get_comment!(comment.id)
+      assert comment.name == "a mean person"
+      assert comment.comment == "this was not good."
+    end
 
     # test "create_comment/1 with valid data creates a comment" do
     #   assert {:ok, %Comment{} = comment} = Blog.create_comment(@valid_attrs)
