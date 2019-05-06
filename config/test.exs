@@ -13,6 +13,6 @@ config :logger, level: :warn
 config :api, Api.Repo,
   username: "jonathanwhittle",
   password: "[password]",
-  database: "blog",
+  database: "blog_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

@@ -6,8 +6,18 @@ defmodule Api.AccountsTest do
   describe "users" do
     alias Api.Accounts.User
 
-    @valid_attrs %{email: "someemail@email.com", name: "some name", password: "some password", admin: true}
-    @update_attrs %{email: "anotheremail@email.com", name: "some updated name", password: "some updated password", admin: false}
+    @valid_attrs %{
+      email: "someemail@email.com", 
+      name: "some name", 
+      password: "some password", 
+      admin: true
+    }
+    @update_attrs %{
+      email: "anotheremail@email.com", 
+      name: "some updated name", 
+      password: "some updated password",
+      admin: false
+    }
     @invalid_attrs %{email: nil, name: nil, password: nil}
 
     def user_fixture(attrs \\ %{}) do
@@ -15,7 +25,7 @@ defmodule Api.AccountsTest do
         attrs
         |> Enum.into(@valid_attrs)
         |> Accounts.create_user()
-
+        
       user
     end
 
@@ -78,8 +88,14 @@ defmodule Api.AccountsTest do
   describe "subscription" do
     alias Api.Accounts.Subscription
 
-    @valid_attrs %{email: "some email", name: "some name"}
-    @update_attrs %{email: "some updated email", name: "some updated name"}
+    @valid_attrs %{
+      email: "some email", 
+      name: "some name"
+    }
+    @update_attrs %{
+      email: "some updated email", 
+      name: "some updated name"
+    }
     @invalid_attrs %{email: nil, name: nil}
 
     def subscription_fixture(attrs \\ %{}) do
@@ -135,4 +151,11 @@ defmodule Api.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_subscription(subscription)
     end
   end
+
+
+  defp get_resp_body(conn) do
+    {:ok, conn} = Map.fetch(conn, :resp_body)
+    conn |> Poison.decode
+  end
+
 end

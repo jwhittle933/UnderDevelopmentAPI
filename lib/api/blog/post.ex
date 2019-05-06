@@ -2,7 +2,7 @@ defmodule Api.Blog.Post do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:id, :body, :title, :featured_image, :visible]}
+  @derive {Jason.Encoder, only: [:id, :body, :title, :featured_image, :visible, :user_id]}
 
   schema "posts" do
     field :body, :string
@@ -19,6 +19,7 @@ defmodule Api.Blog.Post do
   def changeset(post, attrs) do
     post
     |> cast(attrs, [:title, :body, :featured_image, :visible])
-    |> validate_required([:title, :body, :visible])
+    |> validate_required([:title, :body, :visible, :user_id])
+    |> foreign_key_constraint(:user_id)
   end
 end
