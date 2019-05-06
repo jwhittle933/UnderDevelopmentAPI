@@ -42,11 +42,6 @@ defmodule Api.CommentTest do
     post = List.first(user.posts)
     comments = post.comments
 
-    #cleanup
-    on_exit fn ->
-      IO.puts "Exiting Process: #{inspect self()}"
-    end
-
     # merge metadata into context
     [user: user, post: post, comments: comments]
   end
