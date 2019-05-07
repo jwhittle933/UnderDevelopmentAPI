@@ -132,7 +132,7 @@ defmodule Api.Blog do
       ** (Ecto.NoResultsError)
 
   """
-  def get_comment!(id), do: Repo.get(Comment, id)
+  def get_comment!(id), do: Repo.get!(Comment,  id)
 
   @doc """
   Creates a comment.
