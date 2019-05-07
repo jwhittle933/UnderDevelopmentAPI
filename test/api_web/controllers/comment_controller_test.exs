@@ -9,7 +9,7 @@ defmodule ApiWeb.CommentControllerTest do
   @create_attrs %{
     comment: "some comment",
     name: "some name",
-    post_id: 25
+    post_id: 25  # NO POSTS, SO post_id DOESN'T EXIST
   }
   @update_attrs %{
     comment: "some updated comment",
@@ -19,7 +19,7 @@ defmodule ApiWeb.CommentControllerTest do
   @invalid_attrs %{comment: nil, name: nil}
 
   def fixture(:comment) do
-    {:ok, comment} = Accounts.create_comment(@create_attrs)
+    {:ok, comment} = Blog.create_comment(@create_attrs)
     comment
   end
 
@@ -29,12 +29,14 @@ defmodule ApiWeb.CommentControllerTest do
 
   describe "index" do
     test "lists all comment", %{conn: conn} do
+      {:ok, _} = fixture(:comment)
       {:ok, resp} =
         conn
         |> get(Routes.comment_path(conn, :index))
         |> get_resp_body
 
       assert %{"comment" => comment} = resp
+      IO.inspect resp
       [head | _] = resp["comment"]
       assert %{"comment" => comment, "name" => name} = head
     end
@@ -42,7 +44,7 @@ defmodule ApiWeb.CommentControllerTest do
 
   describe "create comment" do
     test "renders comment when data is valid", %{conn: conn} do
-      {:ok, resp} = 
+      {:ok, resp} =
       conn
       |> post(Routes.comment_path(conn, :create), comment: @create_attrs)
       |> get_resp_body
@@ -70,7 +72,7 @@ defmodule ApiWeb.CommentControllerTest do
       conn
       |> post(Routes.comment_path(conn, :create), comment: @invalid_attrs)
       |> get_resp_body
-  
+
       {:ok, errors} = resp["errors"] |> Poison.decode
 
       assert %{
@@ -85,17 +87,16 @@ defmodule ApiWeb.CommentControllerTest do
   describe "update comment" do
     test "renders comment when data is valid", %{conn: conn} do
       with {:ok, %Blog.Comment{id: id} = comment} <- Blog.create_comment(@create_attrs) do
-        
         {:ok, resp} =
-        conn 
+        conn
         |> put(Routes.comment_path(conn, :update, comment), comment: @update_attrs)
         |> get_resp_body
-        
+
         {:ok, resp} =
-        conn 
+        conn
         |> get(Routes.comment_path(conn, :show, id))
         |> get_resp_body
-        
+
         assert %{
           "id" => _,
           "comment" => "some updated comment",
@@ -106,8 +107,8 @@ defmodule ApiWeb.CommentControllerTest do
 
     test "sends errors when data is invalid", %{conn: conn} do
       with {:ok, %Blog.Comment{id: id} = comment} <- Blog.create_comment(@create_attrs) do
-        {:ok, resp} = 
-        conn 
+        {:ok, resp} =
+        conn
         |> put(Routes.comment_path(conn, :update, comment), comment: @invalid_attrs)
         |> get_resp_body
 
@@ -127,7 +128,7 @@ defmodule ApiWeb.CommentControllerTest do
       conn = delete(conn, Routes.comment_path(conn, :delete, comment))
       assert response(conn, 204)
 
-      {:ok, resp} = 
+      {:ok, resp} =
       conn
       |> get(Routes.comment_path(conn, :show, id))
       |> Map.fetch(:status)
