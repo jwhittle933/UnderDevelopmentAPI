@@ -9,18 +9,17 @@ defmodule ApiWeb.CommentControllerTest do
   @create_attrs %{
     comment: "some comment",
     name: "some name",
-    post_id: 25  # NO POSTS, SO post_id DOESN'T EXIST
   }
   @update_attrs %{
     comment: "some updated comment",
     name: "some updated name",
-    post_id: 25
   }
   @invalid_attrs %{comment: nil, name: nil}
 
   def fixture(:comment) do
-    {:ok, comment} = Blog.create_comment(@create_attrs)
-    comment
+    post = Api.Repo.all(Blog.Post) |> List.first
+
+    Map.put(@create_attrs, :post_id, post.id)
   end
 
   setup %{conn: conn} do
@@ -29,30 +28,35 @@ defmodule ApiWeb.CommentControllerTest do
 
   describe "index" do
     test "lists all comment", %{conn: conn} do
-      {:ok, _} = fixture(:comment)
       {:ok, resp} =
         conn
         |> get(Routes.comment_path(conn, :index))
         |> get_resp_body
 
       assert %{"comment" => comment} = resp
-      IO.inspect resp
-      [head | _] = resp["comment"]
-      assert %{"comment" => comment, "name" => name} = head
+      [head | _] = comment
+      assert %{"id" => _, "comment" => _, "name" => _} = head
     end
   end
 
   describe "create comment" do
     test "renders comment when data is valid", %{conn: conn} do
+
+      {:ok, comment} = create_comment()
+
       {:ok, resp} =
       conn
-      |> post(Routes.comment_path(conn, :create), comment: @create_attrs)
+      |> post(Routes.comment_path(conn, :create), comment: comment)
       |> get_resp_body
 
-      %{"id" => id, "comment" => comment, "name" => name, "post_id" => post_id} = resp["comment"]
+      %{
+        "id" => id,
+        "comment" => comment,
+        "name" => name,
+      } = resp["comment"]
+
       assert comment == @create_attrs[:comment]
       assert name == @create_attrs[:name]
-      assert post_id == @create_attrs[:post_id]
 
       {:ok, resp} =
       conn
@@ -124,24 +128,18 @@ defmodule ApiWeb.CommentControllerTest do
 
   describe "delete comment" do
     test "deletes chosen comment", %{conn: conn} do
-      {:ok, %Blog.Comment{id: id} = comment} = @create_attrs |> Blog.create_comment
+      {:ok, temp_comment} = create_comment()
+      {:ok, %Blog.Comment{} = comment} = Blog.create_comment(temp_comment)
+
       conn = delete(conn, Routes.comment_path(conn, :delete, comment))
       assert response(conn, 204)
-
-      {:ok, resp} =
-      conn
-      |> get(Routes.comment_path(conn, :show, id))
-      |> Map.fetch(:status)
-
-      assert resp == 404
-
     end
   end
 
 
-  defp create_comment(_) do
+  defp create_comment() do
     comment = fixture(:comment)
-    {:ok, comment: comment}
+    {:ok, comment}
   end
 
   defp get_resp_body(conn) do

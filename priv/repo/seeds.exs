@@ -16,6 +16,14 @@ Repo.delete_all(Accounts.User)
   Destructure {:ok, ...} for Ecto.build_assoc/3
   Accounts.create_user for hashing password
 """
+
+{:ok, test_user} = %{
+  name: "Test User",
+  email: "test@test.com",
+  password: "testuser",
+  admin: false
+} |> Accounts.create_user
+
 {:ok, admin_cred} = %{
   name: "admin", 
   email: "admin@admin.com", 
