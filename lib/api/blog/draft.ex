@@ -16,7 +16,7 @@ defmodule Api.Blog.Draft do
   @doc false
   def changeset(draft, attrs) do
     draft
-    |> cast(attrs, [:body, :title, :featured_image])
-    |> validate_required([:body, :title])
+    |> cast(attrs, [:body, :title, :featured_image, :user_id])
+    |> validate_required([:body, :title, :user_id])
   end
 end
