@@ -22,12 +22,15 @@ defmodule Api.BlogTest do
 
     def post_fixture(attrs \\ %{}) do
 
-      IO.inspect attrs
+      %Api.Accounts.User{id: id} =
+        Api.Repo.all(Api.Accounts.User)
+        |> List.first
+
 
       {:ok, post} =
         attrs
+        |> Enum.into(%{user_id: id})
         |> Enum.into(@valid_attrs)
-        |> IO.inspect
         |> Blog.create_post()
 
       post
@@ -47,11 +50,7 @@ defmodule Api.BlogTest do
     end
 
     test "create_post/1 with valid data creates a post" do
-      %Api.Accounts.User{id: id} =
-        Api.Repo.all(Api.Accounts.User)
-        |> List.first
-
-      {:ok, post} = post_fixture(%{user_id: id})
+      post = post_fixture()
 
       assert post.body == "some body"
       assert post.title == "some title"
@@ -69,9 +68,8 @@ defmodule Api.BlogTest do
     end
 
     test "update_post/2 with invalid data returns error changeset" do
-      {:error, changeset} = post_fixture()
-      # assert {:error, %Ecto.Changeset{}} = Blog.update_post(post, @invalid_attrs)
-      # assert post == Blog.get_post!(post.id)
+      post = post_fixture()
+      assert {:error, %Ecto.Changeset{} = changeset} = Blog.update_post(post, @invalid_attrs)
     end
 
     test "delete_post/1 deletes the post" do
