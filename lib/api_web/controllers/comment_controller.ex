@@ -52,12 +52,12 @@ defmodule ApiWeb.CommentController do
     else
       {:error, %Ecto.Changeset{} = %{errors: errors}} ->
         resp = get_errors(%{}, errors)
-        conn 
+        conn
         |> put_status(:unprocessable_entity)
         |> put_resp_header("content-type", "application/json")
         |> json(%{errors: resp})
-      _ ->  
-        conn 
+      _ ->
+        conn
         |> put_status(:internal_server_error) 
         |> json %{msg: "Server Error"}
     end
