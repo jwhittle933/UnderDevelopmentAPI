@@ -1,4 +1,4 @@
-defmodule Api.BlogTest do
+defmodule Api.PostTest do
   use Api.DataCase
 
   alias Api.Blog

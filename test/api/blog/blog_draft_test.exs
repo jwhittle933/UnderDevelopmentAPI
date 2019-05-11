@@ -11,8 +11,12 @@ defmodule Api.DraftTest do
     @invalid_attrs %{body: nil, title: nil}
 
     def draft_fixture(attrs \\ %{}) do
+
+      %Api.Accounts.User{id: id} = Api.Accounts.list_users() |> List.first
+
       {:ok, draft} =
         attrs
+        |> Enum.into(%{user_id: id})
         |> Enum.into(@valid_attrs)
         |> Blog.create_draft()
 
@@ -30,7 +34,7 @@ defmodule Api.DraftTest do
     end
 
     test "create_draft/1 with valid data creates a draft" do
-      assert {:ok, %Draft{} = draft} = Blog.create_draft(@valid_attrs)
+      draft = draft_fixture()
       assert draft.body == "some body"
       assert draft.title == "some title"
     end
