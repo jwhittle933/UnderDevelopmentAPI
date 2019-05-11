@@ -207,12 +207,12 @@ defmodule Api.Blog do
 
   ## Examples
 
-      iex> list_drafts()
-      [%Draft{}, ...]
+      iex> list_drafts(4)
+      [%Draft{user_id: 4, ...}, ...]
 
   """
-  def list_drafts do
-    Repo.all(Draft)
+  def list_drafts(id) do
+    Repo.all(Draft, [user_id: id])
   end
 
   @doc """

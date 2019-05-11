@@ -4,7 +4,7 @@ defmodule Api.Accounts.User do
 
   alias Bcrypt
 
-  @derive {Jason.Encoder, only: [:id, :email, :name, :password_hash, :admin]}
+  @derive {Jason.Encoder, only: [:id, :email, :name, :password_hash, :admin, :bio]}
 
   schema "users" do
     field :email, :string
@@ -12,8 +12,8 @@ defmodule Api.Accounts.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     field :admin, :boolean
+    field :bio, :string
     has_many :posts, Api.Blog.Post
-    # has_many :comments, Api.Blog.Comment
 
     timestamps()
   end
@@ -21,7 +21,7 @@ defmodule Api.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :email, :password, :admin])
+    |> cast(attrs, [:name, :email, :password, :admin, :bio])
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 6)
     |> validate_required([:name, :email, :password, :admin])
