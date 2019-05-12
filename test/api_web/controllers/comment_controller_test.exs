@@ -3,7 +3,6 @@ defmodule ApiWeb.CommentControllerTest do
 
   alias Api.Accounts
   alias Api.Blog
-  alias ApiWeb.Blog.CommentController
   alias Poison
 
   @create_attrs %{
