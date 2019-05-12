@@ -44,7 +44,7 @@ defmodule ApiWeb.Router do
     """
     scope "/auth" do
       post "/login", AuthController, :login
-      post "/logout", AuthController, :logout
+      get "/logout", AuthController, :logout
     end
 
     @doc """
