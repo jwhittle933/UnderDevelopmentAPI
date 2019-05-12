@@ -39,19 +39,20 @@ defmodule Api.Accounts do
   @doc """
   Gets a single user by email.
 
-  Raises `Ecto.NoResultsError` if the User does not exist.
+  Returns nil if no user can be found. This method will be implemented
+  for login only.
 
   ## Examples
 
-      iex> get_user_by!("example@example.com")
+      iex> get_user_by("example@example.com")
       %User{}
 
-      iex> get_user!("not_a_user@fail.com")
-      ** (Ecto.NoResultsError)
+      iex> get_user_by("not_a_user@fail.com")
+      ** nil
 
   """
 
-  def get_user_by!(email), do: Repo.get_by!(User, email: email)
+  def get_user_by(email), do: Repo.get_by(User, email: email)
 
   @doc """
   Creates a user.

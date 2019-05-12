@@ -7,7 +7,8 @@ defmodule ApiWeb.DraftController do
   action_fallback ApiWeb.FallbackController
 
   def index(conn, _params) do
-    drafts = Blog.list_drafts()
+    user_id = get_session(:current_user_id)
+    drafts = Blog.list_drafts(user_id)
     json conn, %{drafts: drafts}
   end
 
