@@ -1,5 +1,6 @@
 defmodule ApiWeb.AuthControllerTest do
 
+  import Plug.Test
   use ApiWeb.ConnCase
   alias Api.Accounts
   alias Plug.Conn
@@ -12,9 +13,7 @@ defmodule ApiWeb.AuthControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-
   describe "Login" do
-
     test "Login with valid credentials puts session on connection", %{conn: conn} do
       resp =
         conn
@@ -42,8 +41,21 @@ defmodule ApiWeb.AuthControllerTest do
       msg = get_msg(resp)
       assert msg == "Unauthorized. The email and password do not match."
     end
+  end
 
+  describe "Logout" do
+    test "Logout drops session", %{conn: conn} do
 
+      resp =
+        conn
+        |> init_test_session(current_user_id: 100)
+        |> get(Routes.auth_path(conn, :logout))
+
+      %{current_user: current_user, user_signed_in?: signed_in?} = resp.assigns
+      assert current_user == nil
+      assert signed_in? == false
+      refute get_session(resp, :current_user_id)
+    end
   end
 
 

@@ -36,7 +36,8 @@ defmodule ApiWeb.AuthController do
 
   def logout(conn, _params) do
     conn
-    |> Plug.Conn.configure_session(drop: true)
+    |> clear_session
+    # |> configure_session(drop: true)
     |> assign(:current_user, nil)
     |> assign(:user_signed_in?, false)
   end
