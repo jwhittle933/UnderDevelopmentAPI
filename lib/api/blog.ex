@@ -43,7 +43,7 @@ defmodule Api.Blog do
   def get_post!(id) do
     Repo.get!(Post, id)
     |> Repo.preload(:comments)
-    |> Repo.preload(:user)
+    |> Repo.preload([user: from(u in User, select: %{id: u.id, name: u.name})])
   end
 
   @doc """
