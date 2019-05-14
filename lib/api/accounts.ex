@@ -23,7 +23,7 @@ defmodule Api.Accounts do
   @doc """
   Gets a single user.
 
-  Raises `Ecto.NoResultsError` if the User does not exist.
+  Returns nil if the User does not exist.
 
   ## Examples
 
