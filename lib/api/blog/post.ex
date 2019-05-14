@@ -2,7 +2,7 @@ defmodule Api.Blog.Post do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:id, :body, :title, :featured_image, :visible, :user_id]}
+  @derive {Jason.Encoder, only: [:id, :body, :title, :featured_image, :visible, :user, :comments]}
 
   schema "posts" do
     field :body, :string

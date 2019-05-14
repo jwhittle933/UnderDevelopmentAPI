@@ -20,6 +20,8 @@ defmodule Api.Blog do
   """
   def list_posts do
     Repo.all(Post)
+    |> Repo.preload(:comments)
+    |> Repo.preload(:user)
   end
 
   @doc """
