@@ -8,7 +8,7 @@ defmodule ApiWeb.PostController do
 
   def index(conn, _params) do
     posts = Blog.list_posts()
-    json conn, posts: posts
+    json conn, %{posts: posts}
   end
 
   def create(conn, %{"post" => post_params}) do

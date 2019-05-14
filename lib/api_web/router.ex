@@ -1,9 +1,7 @@
 defmodule ApiWeb.Router do
   use ApiWeb, :router
 
-  alias ApiWeb.Plug.Authenticate
-
-  @auth Authenticate
+  @auth ApiWeb.Plug.Authenticate
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -16,6 +14,8 @@ defmodule ApiWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
   end
 
   pipeline :auth do
@@ -28,9 +28,8 @@ defmodule ApiWeb.Router do
       api requests to /api/comments or /api/posts @ :index, :show
       need no auth. This is for general readership
 
-      For now, comments are exposed globally; see issues
     """
-    resources "/posts", PostsController, only: [:index, :show]
+    resources "/posts", PostController, only: [:index, :show]
     resources "/comments", CommentController
 
     @doc """
@@ -41,6 +40,10 @@ defmodule ApiWeb.Router do
       current_user and logged_in status. If nil, redirect
       user to login page. This will only apply to content
       creation and management
+
+      Once authenticated, a user map will be stored on the connection
+      and a user_id will be stored in a session. These will be used
+      in the UI for special access and controls.
     """
     scope "/auth" do
       post "/login", AuthController, :login
@@ -49,16 +52,13 @@ defmodule ApiWeb.Router do
 
     @doc """
       Scope /api/users for authorized user content creation
-      With this scheme, each post/draft will be associtated with 
+      With this scheme, each post/draft will be associtated with
       a user_id
-
-      Still need to determine how to mangage and display
-      user-associtated comments. Perhaps a new DB table?
     """
     scope "/users" do
       pipe_through :auth
       resources "/", UserController
-      resources "/posts", PostsController, only: [:create, :update, :delete]
+      resources "/posts", PostController, only: [:create, :update, :delete]
       resources "/drafts", DraftController
     end
 
