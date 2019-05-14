@@ -20,7 +20,6 @@ defmodule Api.Blog do
 
   """
   def list_posts do
-    # query = from u in Api.Accounts.User, select: [u.bio, u.name, u.id]
     Repo.all(Post)
     |> Repo.preload(:comments)
     |> Repo.preload([user: from(u in User, select: %{id: u.id, name: u.name})])
