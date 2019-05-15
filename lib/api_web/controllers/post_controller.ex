@@ -11,6 +11,9 @@ defmodule ApiWeb.PostController do
     json conn, %{posts: posts}
   end
 
+  @doc """
+    :create method is hidden behind auth
+  """
   def create(conn, %{"post" => post_params}) do
     with {:ok, %Post{} = post} <- Blog.create_post(post_params) do
       conn
@@ -25,6 +28,9 @@ defmodule ApiWeb.PostController do
     json conn, %{post: post}
   end
 
+  @doc """
+    :update method is hidden behind auth
+  """
   def update(conn, %{"id" => id, "post" => post_params}) do
     post = Blog.get_post!(id)
 
@@ -33,6 +39,9 @@ defmodule ApiWeb.PostController do
     end
   end
 
+  @doc """
+    :delete method is hidden behind auth
+  """
   def delete(conn, %{"id" => id}) do
     post = Blog.get_post!(id)
 

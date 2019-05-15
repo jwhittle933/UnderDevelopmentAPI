@@ -27,7 +27,8 @@ defmodule ApiWeb.PostControllerTest do
   describe "index" do
     test "lists all posts", %{conn: conn} do
       resp =
-        get(conn, Routes.post_path(conn, :index))
+        conn
+        |> get(Routes.post_path(conn, :index))
         |> get_resp_body
 
       refute is_nil(resp["posts"])
@@ -36,6 +37,50 @@ defmodule ApiWeb.PostControllerTest do
         refute is_nil(post["id"])
         refute is_nil(post["user"]["name"])
         refute is_nil(post["user"]["id"])
+      end)
+    end
+  end
+
+  describe "show" do
+    test "show returns a single post", %{conn: conn} do
+      valid_id = 190
+      resp =
+        conn
+        |> get(Routes.post_path(conn, :show, valid_id))
+        |> get_resp_body
+
+      post = resp["post"]
+      assert %{
+        "id" => id,
+        "body" => _,
+        "comments" => comments,
+        "title" => _,
+        "featured_image" => _,
+        "inserted_at" => _,
+        "updated_at" => _,
+        "user" => user,
+        "visible" => _
+      } = post
+
+      assert %{
+        "id" => _,
+        "name" => _
+      } = user
+
+      Enum.each(comments, fn comment ->
+        assert %{
+          "comment" => _,
+          "id" => _,
+          "name" => _,
+          "post_id" => post_id
+        } = comment
+        assert post_id == id
+      end)
+    end
+
+    test "show raises Ecto.NoResultsError with bad post_id" do
+      assert_raise(Ecto.NoResultsError, fn ->
+          get(conn,Routes.post_path(conn, :show, 2000))
       end)
     end
   end
