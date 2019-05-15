@@ -29,8 +29,14 @@ defmodule ApiWeb.PostControllerTest do
       resp =
         get(conn, Routes.post_path(conn, :index))
         |> get_resp_body
-      IO.inspect resp
+
       refute is_nil(resp["posts"])
+      Enum.each(resp["posts"], fn post ->
+        refute is_nil(post["body"])
+        refute is_nil(post["id"])
+        refute is_nil(post["user"]["name"])
+        refute is_nil(post["user"]["id"])
+      end)
     end
   end
 
