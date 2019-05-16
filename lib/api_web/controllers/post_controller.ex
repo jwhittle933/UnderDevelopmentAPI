@@ -4,7 +4,7 @@ defmodule ApiWeb.PostController do
   alias Api.Blog
   alias Api.Blog.Post
 
-  action_fallback ApiWeb.FallbackController
+  # action_fallback ApiWeb.FallbackController
 
   def index(conn, _params) do
     posts = Blog.list_posts()
@@ -16,10 +16,17 @@ defmodule ApiWeb.PostController do
   """
   def create(conn, %{"post" => post_params}) do
     with {:ok, %Post{} = post} <- Blog.create_post(post_params) do
+      IO.inspect post
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
-      |> send_resp(200, post: post)
+      |> json(%{id: post.id, body: post.body, title: post.title})
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_status(:bad_request)
+        |> put_resp_header("content-type", "application/json")
+        |> json(%{errors: changeset.errors})
     end
   end
 

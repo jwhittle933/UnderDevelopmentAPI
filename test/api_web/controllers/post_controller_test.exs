@@ -2,22 +2,30 @@ defmodule ApiWeb.PostControllerTest do
   use ApiWeb.ConnCase
 
   import Poison
+  import Plug.Test
+  alias Api.Accounts
   alias Api.Blog
   alias Api.Blog.Post
 
   @create_attrs %{
     body: "some body",
-    title: "some title"
+    title: "some title",
+    visible: true
   }
   @update_attrs %{
     body: "some updated body",
-    title: "some updated title"
+    title: "some updated title",
+    visible: false
   }
-  @invalid_attrs %{body: nil, title: nil}
+  @invalid_attrs %{body: nil, title: nil, visible: nil}
+
+  def fixture(:user) do
+    Accounts.list_users |> List.first
+  end
 
   def fixture(:post) do
-    {:ok, post} = Blog.create_post(@create_attrs)
-    post
+    %{id: id} = fixture(:user)
+    Enum.into(@create_attrs, %{user_id: id})
   end
 
   setup %{conn: conn} do
@@ -85,25 +93,31 @@ defmodule ApiWeb.PostControllerTest do
     end
   end
 
-  # describe "create post" do
-  #   test "renders post when data is valid", %{conn: conn} do
-  #     conn = post(conn, Routes.post_path(conn, :create), post: @create_attrs)
-  #     assert %{"id" => id} = json_response(conn, 201)["data"]
+  describe "create post" do
+    test "renders post when data is valid", %{conn: conn} do
+      post = fixture(:post)
+      resp =
+        conn
+        |> authenticate
+        |> post(Routes.post_path(conn, :create, %{post: post}))
 
-  #     conn = get(conn, Routes.post_path(conn, :show, id))
+      # IO.inspect resp
+      # assert %{"id" => id} = json_response(conn, 201)["data"]
 
-  #     assert %{
-  #              "id" => id,
-  #              "body" => "some body",
-  #              "title" => "some title"
-  #            } = json_response(conn, 200)["data"]
-  #   end
+      # conn = get(conn, Routes.post_path(conn, :show, id))
 
-  #   test "renders errors when data is invalid", %{conn: conn} do
-  #     conn = post(conn, Routes.post_path(conn, :create), post: @invalid_attrs)
-  #     assert json_response(conn, 422)["errors"] != %{}
-  #   end
-  # end
+      # assert %{
+      #          "id" => id,
+      #          "body" => "some body",
+      #          "title" => "some title"
+      #        } = json_response(conn, 200)["data"]
+    end
+
+    test "renders errors when data is invalid", %{conn: conn} do
+      # conn = post(conn, Routes.post_path(conn, :create), post: @invalid_attrs)
+      # assert json_response(conn, 422)["errors"] != %{}
+    end
+  end
 
   # describe "update post" do
   #   setup [:create_post]
@@ -143,10 +157,16 @@ defmodule ApiWeb.PostControllerTest do
   defp create_post(_) do
     post = fixture(:post)
     {:ok, post: post}
+    Blog.create_post(post)
   end
 
   defp get_resp_body(resp) do
     {:ok, body} = resp.resp_body |> decode
     body
+  end
+
+  defp authenticate(conn) do
+    %{id: id} = fixture(:user)
+    conn |> init_test_session(current_user_id: id)
   end
 end

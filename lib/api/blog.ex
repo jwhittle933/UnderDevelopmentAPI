@@ -58,9 +58,9 @@ defmodule Api.Blog do
 
   """
   def create_post(attrs \\ %{}) do
-    %Post{}
-    |> Post.changeset(attrs)
-    |> Repo.insert()
+      %Post{}
+      |> Post.changeset(attrs)
+      |> Repo.insert()
   end
 
   @doc """
