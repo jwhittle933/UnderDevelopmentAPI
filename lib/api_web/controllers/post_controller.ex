@@ -16,17 +16,16 @@ defmodule ApiWeb.PostController do
   """
   def create(conn, %{"post" => post_params}) do
     with {:ok, %Post{} = post} <- Blog.create_post(post_params) do
-      IO.inspect post
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
       |> json(%{id: post.id, body: post.body, title: post.title})
     else
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, %Ecto.Changeset{errors: errors} = changeset} ->
         conn
         |> put_status(:bad_request)
         |> put_resp_header("content-type", "application/json")
-        |> json(%{errors: changeset.errors})
+        |> json(%{errors: errors}) # return errors and display in UI
     end
   end
 
