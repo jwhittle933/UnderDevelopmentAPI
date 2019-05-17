@@ -189,7 +189,7 @@ defmodule ApiWeb.PostControllerTest do
         |> authenticate
         |> delete(Routes.post_path(conn, :delete, post))
 
-      assert response(conn, 204)
+      assert resp.status == 204
 
       assert_error_sent 404, fn ->
         get(conn, Routes.post_path(conn, :show, post))
