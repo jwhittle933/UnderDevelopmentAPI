@@ -11,10 +11,11 @@ defmodule ApiWeb.Helpers do
     end)
   end
 
-  defp get_resp_body(conn) do
-    {:ok, conn} = Map.fetch(conn, :resp_body)
-    conn |> decode
+  defp get_resp_body(resp) do
+    {:ok, body} = resp.resp_body |> decode
+    body
   end
+
 
 
 end

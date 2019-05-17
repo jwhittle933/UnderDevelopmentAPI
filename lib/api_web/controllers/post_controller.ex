@@ -4,7 +4,7 @@ defmodule ApiWeb.PostController do
   alias Api.Blog
   alias Api.Blog.Post
 
-  # action_fallback ApiWeb.FallbackController
+  action_fallback ApiWeb.FallbackController
 
   def index(conn, _params) do
     posts = Blog.list_posts()
@@ -20,14 +20,6 @@ defmodule ApiWeb.PostController do
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
       |> json(%{id: post.id, body: post.body, title: post.title})
-    else
-      {:error, %Ecto.Changeset{} = changeset} ->
-        errors = get_errors(changeset)
-
-        conn
-        |> put_status(:bad_request)
-        |> put_resp_header("content-type", "application/json")
-        |> json(%{errors: errors}) # return errors and display in UI
     end
   end
 
