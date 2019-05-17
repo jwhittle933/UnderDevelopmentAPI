@@ -141,27 +141,44 @@ defmodule ApiWeb.PostControllerTest do
     end
   end
 
-  # describe "update post" do
-  #   setup [:create_post]
+  describe "update post" do
+    setup [:create_post]
 
-  #   test "renders post when data is valid", %{conn: conn, post: %Post{id: id} = post} do
-  #     conn = put(conn, Routes.post_path(conn, :update, post), post: @update_attrs)
-  #     assert %{"id" => ^id} = json_response(conn, 200)["data"]
+    test "renders post when data is valid", %{conn: conn, post: %Post{id: id} = post} do
+      %{"post" => post} =
+        conn
+        |> authenticate
+        |> put(Routes.post_path(conn, :update, post), post: @update_attrs)
+        |> get_resp_body
 
-  #     conn = get(conn, Routes.post_path(conn, :show, id))
+      assert %{"id" => id} = post
 
-  #     assert %{
-  #              "id" => id,
-  #              "body" => "some updated body",
-  #              "title" => "some updated title"
-  #            } = json_response(conn, 200)["data"]
-  #   end
+      resp =
+        conn
+        |> get(Routes.post_path(conn, :show, id))
+        |> get_resp_body
 
-  #   test "renders errors when data is invalid", %{conn: conn, post: post} do
-  #     conn = put(conn, Routes.post_path(conn, :update, post), post: @invalid_attrs)
-  #     assert json_response(conn, 422)["errors"] != %{}
-  #   end
-  # end
+      assert %{
+        "id" => id,
+        "body" => "some updated body",
+        "title" => "some updated title"
+      } = resp["post"]
+    end
+
+    test "renders errors when data is invalid", %{conn: conn, post: post} do
+      %{"errors" => errors} =
+        conn
+        |> authenticate
+        |> put(Routes.post_path(conn, :update, post), post: @invalid_attrs)
+        |> get_resp_body
+
+      assert %{
+        "body" => ["can't be blank"],
+        "title" => ["can't be blank"],
+        "visible" => ["can't be blank"]
+      } = errors
+    end
+  end
 
   # describe "delete post" do
   #   setup [:create_post]
@@ -177,9 +194,8 @@ defmodule ApiWeb.PostControllerTest do
   # end
 
   defp create_post(_) do
-    post = fixture(:post)
-    {:ok, post: post}
-    Blog.create_post(post)
+    {:ok, post} = fixture(:post) |> Blog.create_post
+    [post: post]
   end
 
   defp get_resp_body(resp) do
