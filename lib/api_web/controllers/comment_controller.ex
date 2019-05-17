@@ -31,7 +31,7 @@ defmodule ApiWeb.CommentController do
   end
 
   def show(conn, %{"id" => id}) do
-    with %Blog.Comment{} = comment <- get_comment!(id) do
+    with %Comment{} = comment <- get_comment!(id) do
       conn
       |> put_status(:ok)
       |> put_resp_header("content-type", "application/json")
@@ -59,7 +59,7 @@ defmodule ApiWeb.CommentController do
       _ ->
         conn
         |> put_status(:internal_server_error)
-        |> json %{msg: "Server Error"}
+        |> json(%{msg: "Server Error"})
     end
   end
 

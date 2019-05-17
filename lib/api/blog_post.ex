@@ -5,7 +5,7 @@ defmodule Api.Blog.Fragments.Posts do
   alias Api.Repo
 
   alias Api.Blog.Post
-  alias Api.Account.User
+  alias Api.Accounts.User
 
    @doc """
   Returns the list of posts.

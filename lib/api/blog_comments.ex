@@ -2,7 +2,7 @@ defmodule Api.Blog.Fragments.Comments do
 
   import Ecto.Changeset
   alias Api.Repo
-  alias Api.Blog.Comment
+  alias Api.Blog.{Comment, Post}
 
    @doc """
   Returns an `%Ecto.Changeset{}` for tracking post changes.

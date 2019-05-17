@@ -15,7 +15,7 @@ defmodule ApiWeb.ReplyController do
     with {:ok, %Reply{} = reply} <- create_reply(reply_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", reply_path(conn, :show, reply))
+      |> put_resp_header("content-type", 'application/json')
       |> render("show.json", reply: reply)
     end
   end
