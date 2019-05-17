@@ -1,7 +1,7 @@
 defmodule ApiWeb.ReplyControllerTest do
   use ApiWeb.ConnCase
 
-  alias Api.Blog
+  use Api.Blog
   alias Api.Blog.Reply
 
   @create_attrs %{
@@ -15,7 +15,7 @@ defmodule ApiWeb.ReplyControllerTest do
   @invalid_attrs %{comment: nil, name: nil}
 
   def fixture(:reply) do
-    {:ok, reply} = Blog.create_reply(@create_attrs)
+    {:ok, reply} = create_reply(@create_attrs)
     reply
   end
 

@@ -1,14 +1,14 @@
 defmodule Api.Blog.Comment do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Api.Blog
+  alias Api.Blog.Post
 
   @derive {Jason.Encoder, only: [:id, :comment, :name, :post_id]}
 
   schema "comments" do
     field :comment, :string
     field :name, :string
-    belongs_to :post, Blog.Post
+    belongs_to :post, Post
 
     timestamps()
   end

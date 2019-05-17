@@ -2,9 +2,9 @@ defmodule ApiWeb.PostControllerTest do
   use ApiWeb.ConnCase
 
   use Api.Accounts
+  use Api.Blog
   import Poison, only: [decode: 1]
   import Plug.Test
-  alias Api.Blog
   alias Api.Blog.Post
 
   @create_attrs %{
@@ -198,7 +198,7 @@ defmodule ApiWeb.PostControllerTest do
   end
 
   defp create_post(_) do
-    {:ok, post} = fixture(:post) |> Blog.create_post
+    {:ok, post} = fixture(:post) |> create_post
     [post: post]
   end
 
