@@ -85,7 +85,7 @@ defmodule ApiWeb.ReplyControllerTest do
     end
   end
 
-  defp create_reply(_) do
+  defp new_reply(_) do
     reply = fixture(:reply)
     {:ok, reply: reply}
   end

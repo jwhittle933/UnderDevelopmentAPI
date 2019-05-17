@@ -197,7 +197,7 @@ defmodule ApiWeb.PostControllerTest do
     end
   end
 
-  defp create_post(_) do
+  defp new_post(_) do
     {:ok, post} = fixture(:post) |> create_post
     [post: post]
   end

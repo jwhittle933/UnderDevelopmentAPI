@@ -85,7 +85,7 @@ defmodule ApiWeb.DraftControllerTest do
     end
   end
 
-  defp create_draft(_) do
+  defp new_draft(_) do
     draft = fixture(:draft)
     {:ok, draft: draft}
   end

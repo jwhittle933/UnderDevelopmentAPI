@@ -2,14 +2,14 @@ defmodule Api.DraftTest do
   use Api.DataCase
 
   use Api.Blog
+  alias Api.Blog.Draft
+
+  @valid_attrs %{body: "some body", title: "some title"}
+  @update_attrs %{body: "some updated body", title: "some updated title"}
+  @invalid_attrs %{body: nil, title: nil}
+
 
   describe "drafts" do
-    alias Api.Blog.Draft
-
-    @valid_attrs %{body: "some body", title: "some title"}
-    @update_attrs %{body: "some updated body", title: "some updated title"}
-    @invalid_attrs %{body: nil, title: nil}
-
     def draft_fixture(attrs \\ %{}) do
 
       %Api.Accounts.User{id: id} = Api.Accounts.list_users() |> List.first
@@ -25,7 +25,7 @@ defmodule Api.DraftTest do
 
     test "list_drafts/0 returns all drafts" do
       draft = draft_fixture()
-      assert list_drafts() == [draft]
+      assert list_drafts(draft.user_id) == [draft]
     end
 
     test "get_draft!/1 returns the draft with given id" do

@@ -85,7 +85,7 @@ defmodule ApiWeb.SubscriptionControllerTest do
     end
   end
 
-  defp create_subscription(_) do
+  defp new_subscription(_) do
     subscription = fixture(:subscription)
     {:ok, subscription: subscription}
   end

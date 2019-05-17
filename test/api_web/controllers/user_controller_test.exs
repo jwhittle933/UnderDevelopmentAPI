@@ -91,7 +91,7 @@ defmodule ApiWeb.UserControllerTest do
     end
   end
 
-  defp create_user(_) do
+  defp new_user(_) do
     user = fixture(:user)
     {:ok, user: user}
   end

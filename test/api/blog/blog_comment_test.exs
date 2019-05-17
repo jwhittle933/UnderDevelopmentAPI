@@ -2,21 +2,22 @@ defmodule Api.CommentTest do
   use Api.DataCase
 
   use Api.Blog
+  alias Api.Accounts.User
   alias Api.Blog.{Post, Comment}
   alias Api.Repo
 
-  @fixture %Accounts.User{
+  @fixture %User{
     email: "some@email.com",
     name: "a user",
     password: "a password",
     admin: false,
     posts: [
-      %Blog.Post {
+      %Post {
         title: "a post",
         body: "a really long post",
         featured_image: "s3 somewhere",
         comments: [
-          %Blog.Comment {
+          %Comment {
             name: "a mean person",
             comment: "this was not good."
           }
