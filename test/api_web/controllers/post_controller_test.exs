@@ -180,18 +180,22 @@ defmodule ApiWeb.PostControllerTest do
     end
   end
 
-  # describe "delete post" do
-  #   setup [:create_post]
+  describe "delete post" do
+    setup [:create_post]
 
-  #   test "deletes chosen post", %{conn: conn, post: post} do
-  #     conn = delete(conn, Routes.post_path(conn, :delete, post))
-  #     assert response(conn, 204)
+    test "deletes chosen post", %{conn: conn, post: post} do
+      resp =
+        conn
+        |> authenticate
+        |> delete(Routes.post_path(conn, :delete, post))
 
-  #     assert_error_sent 404, fn ->
-  #       get(conn, Routes.post_path(conn, :show, post))
-  #     end
-  #   end
-  # end
+      assert response(conn, 204)
+
+      assert_error_sent 404, fn ->
+        get(conn, Routes.post_path(conn, :show, post))
+      end
+    end
+  end
 
   defp create_post(_) do
     {:ok, post} = fixture(:post) |> Blog.create_post
