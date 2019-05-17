@@ -6,7 +6,7 @@ defmodule ApiWeb.Plug.Authenticate do
 
   def call(conn, _params) do
     with current_user_id when not is_nil(current_user_id) <- get_session(conn, :current_user_id),
-      user when not is_nil(user) <- Accounts.get_user(current_user_id) do
+      user when not is_nil(user) <- Accounts.get_user!(current_user_id) do
       conn
       |> configure_session(renew: true)
       |> set_current_user(user)
@@ -21,7 +21,7 @@ defmodule ApiWeb.Plug.Authenticate do
 
   defp set_current_user(conn, %{id: _, name: _} = user) do
     conn
-    |> assign(:current_user, user)
+    |> assign(:current_user, %{id: user.id, admin: user.admin, name: user.name})
     |> assign(:user_signed_in?, true)
   end
 end
