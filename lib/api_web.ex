@@ -24,6 +24,7 @@ defmodule ApiWeb do
       import Plug.Conn
       import ApiWeb.Gettext
       import ApiWeb.Helpers.ErrorEncode
+      import ApiWeb.Helpers, only: [get_errors: 1]
       alias ApiWeb.Router.Helpers, as: Routes
     end
   end

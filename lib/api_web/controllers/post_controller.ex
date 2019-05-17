@@ -21,7 +21,9 @@ defmodule ApiWeb.PostController do
       |> put_resp_header("content-type", "application/json")
       |> json(%{id: post.id, body: post.body, title: post.title})
     else
-      {:error, %Ecto.Changeset{errors: errors} = changeset} ->
+      {:error, %Ecto.Changeset{} = changeset} ->
+        errors = get_errors(changeset)
+
         conn
         |> put_status(:bad_request)
         |> put_resp_header("content-type", "application/json")
@@ -55,4 +57,5 @@ defmodule ApiWeb.PostController do
       send_resp(conn, :no_content, "")
     end
   end
-end
+
+ end

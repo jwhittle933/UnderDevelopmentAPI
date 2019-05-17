@@ -125,9 +125,19 @@ defmodule ApiWeb.PostControllerTest do
       } = resp["post"]
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
-      # conn = post(conn, Routes.post_path(conn, :create), post: @invalid_attrs)
-      # assert json_response(conn, 422)["errors"] != %{}
+    test "Returns errors when data is invalid", %{conn: conn} do
+      %{"errors" => errors} =
+        conn
+        |> authenticate
+        |> post(Routes.post_path(conn, :create), post: @invalid_attrs)
+        |> get_resp_body
+
+      assert %{
+        "body" => ["can't be blank"],
+        "title" => ["can't be blank"],
+        "user_id" => ["can't be blank"],
+        "visible" => ["can't be blank"]
+      } = errors
     end
   end
 
