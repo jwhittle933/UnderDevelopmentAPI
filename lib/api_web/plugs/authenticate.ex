@@ -21,7 +21,7 @@ defmodule ApiWeb.Plug.Authenticate do
 
   defp set_current_user(conn, %{id: _, name: _} = user) do
     conn
-    |> assign(:current_user, user)
+    |> assign(:current_user, %{id: user.id, admin: user.admin, name: user.name})
     |> assign(:user_signed_in?, true)
   end
 end

@@ -1,7 +1,7 @@
 defmodule ApiWeb.PostControllerTest do
   use ApiWeb.ConnCase
 
-  import Poison
+  import Poison, only: [decode: 1]
   import Plug.Test
   alias Api.Accounts
   alias Api.Blog
@@ -100,17 +100,29 @@ defmodule ApiWeb.PostControllerTest do
         conn
         |> authenticate
         |> post(Routes.post_path(conn, :create, %{post: post}))
+        |> get_resp_body
 
-      # IO.inspect resp
-      # assert %{"id" => id} = json_response(conn, 201)["data"]
+      assert %{
+        "body" => "some body",
+        "id" => id,
+        "title" => "some title"
+      } = resp
 
-      # conn = get(conn, Routes.post_path(conn, :show, id))
+      resp =
+        conn
+        |> get(Routes.post_path(conn, :show, id))
+        |> get_resp_body
 
-      # assert %{
-      #          "id" => id,
-      #          "body" => "some body",
-      #          "title" => "some title"
-      #        } = json_response(conn, 200)["data"]
+
+      assert %{
+        "body" => "some body",
+        "comments" => [],
+        "id" => ^id,
+        "featured_image" => _,
+        "title" => "some title",
+        "user" => %{"id" => _, "name" => "Test User"},
+        "visible" => _
+      } = resp["post"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
