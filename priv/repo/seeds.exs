@@ -1,7 +1,7 @@
 # mix run priv/repo/seeds.exs
 
 alias Api.Repo
-alias Api.Accounts
+use Api.Accounts
 alias Api.Blog.{Post, Comment}
 alias Bcrypt
 
@@ -14,7 +14,7 @@ Repo.delete_all(Accounts.User)
 
 """
   Destructure {:ok, ...} for Ecto.build_assoc/3
-  Accounts.create_user for hashing password
+  create_user for hashing password
 """
 
 {:ok, test_user} = %{
@@ -22,21 +22,21 @@ Repo.delete_all(Accounts.User)
   email: "test@test.com",
   password: "testuser",
   admin: false
-} |> Accounts.create_user
+} |> create_user
 
 {:ok, admin_cred} = %{
   name: "admin", 
   email: "admin@admin.com", 
   password: "administrator", 
   admin: true
-} |> Accounts.create_user
+} |> create_user
 
 {:ok, jw} = %{
   name: "Jonathan Whittle", 
   email: "jonathan.m.whittle@gmail.com", 
   password: "jwhittle", 
   admin: true
-} |> Accounts.create_user
+} |> create_user
 
 """
   List of posts |> Enum.each

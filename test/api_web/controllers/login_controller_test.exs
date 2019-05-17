@@ -2,7 +2,6 @@ defmodule ApiWeb.AuthControllerTest do
 
   import Plug.Test
   use ApiWeb.ConnCase
-  alias Api.Accounts
   alias Plug.Conn
 
   @valid %{email: "test@test.com", password: "testuser"}

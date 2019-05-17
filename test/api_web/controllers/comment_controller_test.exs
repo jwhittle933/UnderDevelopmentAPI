@@ -1,7 +1,6 @@
 defmodule ApiWeb.CommentControllerTest do
   use ApiWeb.ConnCase
 
-  alias Api.Accounts
   alias Api.Blog
   alias Poison
 

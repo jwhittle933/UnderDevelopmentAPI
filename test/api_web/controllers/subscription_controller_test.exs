@@ -1,7 +1,7 @@
 defmodule ApiWeb.SubscriptionControllerTest do
   use ApiWeb.ConnCase
 
-  alias Api.Accounts
+  use Api.Accounts
   alias Api.Accounts.Subscription
 
   @create_attrs %{
@@ -15,7 +15,7 @@ defmodule ApiWeb.SubscriptionControllerTest do
   @invalid_attrs %{email: nil, name: nil}
 
   def fixture(:subscription) do
-    {:ok, subscription} = Accounts.create_subscription(@create_attrs)
+    {:ok, subscription} = create_subscription(@create_attrs)
     subscription
   end
 

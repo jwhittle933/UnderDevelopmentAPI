@@ -1,7 +1,6 @@
 defmodule Api.CommentTest do
   use Api.DataCase
 
-  alias Api.Accounts
   alias Api.Blog
   alias Api.Blog.{Post, Comment}
   alias Api.Repo

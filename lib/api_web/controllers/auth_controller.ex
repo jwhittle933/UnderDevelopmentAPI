@@ -1,7 +1,7 @@
 defmodule ApiWeb.AuthController do
   use ApiWeb, :controller
 
-  alias Api.Accounts
+  use Api.Accounts
   alias Api.Accounts.User
   import Bcrypt, only: [verify_pass: 2]
 
@@ -12,7 +12,7 @@ defmodule ApiWeb.AuthController do
     login view.
   """
   def login(conn, %{"email" => email, "password" => password}) do
-    with %User{} = user <- Accounts.get_user_by(email),
+    with %User{} = user <- get_user_by(email),
       true <- verify_pass(password, user.password_hash) do
         conn
         |> put_session(:current_user_id, user.id)

@@ -4,7 +4,14 @@ defmodule Api.Accounts do
   """
 
   @doc """
-  Context Fragment imports
+  __using__() imports Context Fragments and injects them for use.
+
+  In the using Module, these Context methods will be exposed like
+  any other import statement, without reference to the Module name.
+
+  If you'd rather use ModuleName.function in your using Module, change
+  the following imports to alias.
+
   """
 
   defmacro __using__(_) do
