@@ -1,13 +1,14 @@
 defmodule ApiWeb.Plug.Authenticate do
 
   use Api.Accounts
+  alias Api.Accounts.User
   import Plug.Conn
 
   def init(params), do: params
 
   def call(conn, _params) do
     with current_user_id when not is_nil(current_user_id) <- get_session(conn, :current_user_id),
-      user when not is_nil(user) <- get_user!(current_user_id) do
+      user when not is_nil(user) <- get_user(current_user_id) do
       conn
       |> configure_session(renew: true)
       |> set_current_user(user)
