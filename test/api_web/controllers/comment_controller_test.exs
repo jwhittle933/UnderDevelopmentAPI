@@ -41,7 +41,7 @@ defmodule ApiWeb.CommentControllerTest do
   describe "create comment" do
     test "renders comment when data is valid", %{conn: conn} do
 
-      {:ok, comment} = create_comment()
+      {:ok, comment} = new_comment()
 
       {:ok, resp} =
       conn
@@ -127,7 +127,7 @@ defmodule ApiWeb.CommentControllerTest do
 
   describe "delete comment" do
     test "deletes chosen comment", %{conn: conn} do
-      {:ok, temp_comment} = create_comment()
+      {:ok, temp_comment} = new_comment()
       {:ok, %Comment{} = comment} = create_comment(temp_comment)
 
       conn = delete(conn, Routes.comment_path(conn, :delete, comment))

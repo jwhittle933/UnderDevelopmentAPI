@@ -7,8 +7,9 @@ defmodule ApiWeb.SubscriptionController do
   action_fallback ApiWeb.FallbackController
 
   def index(conn, _params) do
-    subscription = list_subscription( )
-    render(conn, "index.json", subscription: subscription)
+    subscriptions = list_subscription()
+    conn
+    |> json(%{subscriptions: subscriptions})
   end
 
   def create(conn, %{"subscription" => subscription_params}) do
@@ -16,20 +17,22 @@ defmodule ApiWeb.SubscriptionController do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.subscription_path(conn, :show, subscription))
-      |> render("show.json", subscription: subscription)
+      |> json(%{subscription: subscription, msg: "Thanks for subscribing."})
     end
   end
 
   def show(conn, %{"id" => id}) do
     subscription = get_subscription!(id)
-    render(conn, "show.json", subscription: subscription)
+
+    conn
+    |> json(%{subscription: subscription})
   end
 
   def update(conn, %{"id" => id, "subscription" => subscription_params}) do
     subscription = get_subscription!(id)
 
     with {:ok, %Subscription{} = subscription} <- update_subscription(subscription, subscription_params) do
-      render(conn, "show.json", subscription: subscription)
+      conn |> json(%{subscription: subscription})
     end
   end
 

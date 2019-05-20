@@ -142,7 +142,7 @@ defmodule ApiWeb.PostControllerTest do
   end
 
   describe "update post" do
-    setup [:create_post]
+    setup [:new_post]
 
     test "renders post when data is valid", %{conn: conn, post: %Post{id: id} = post} do
       %{"post" => post} =
@@ -181,7 +181,7 @@ defmodule ApiWeb.PostControllerTest do
   end
 
   describe "delete post" do
-    setup [:create_post]
+    setup [:new_post]
 
     test "deletes chosen post", %{conn: conn, post: post} do
       resp =

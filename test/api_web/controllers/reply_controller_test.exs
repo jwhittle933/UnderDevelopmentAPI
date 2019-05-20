@@ -51,7 +51,7 @@ defmodule ApiWeb.ReplyControllerTest do
   end
 
   describe "update reply" do
-    setup [:create_reply]
+    setup [:new_reply]
 
     test "renders reply when data is valid", %{conn: conn, reply: %Reply{id: id} = reply} do
       conn = put(conn, Routes.reply_path(conn, :update, reply), reply: @update_attrs)
@@ -73,7 +73,7 @@ defmodule ApiWeb.ReplyControllerTest do
   end
 
   describe "delete reply" do
-    setup [:create_reply]
+    setup [:new_reply]
 
     test "deletes chosen reply", %{conn: conn, reply: reply} do
       conn = delete(conn, Routes.reply_path(conn, :delete, reply))
