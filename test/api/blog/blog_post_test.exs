@@ -40,14 +40,17 @@ defmodule Api.PostTest do
     test "list_posts/0 returns all posts" do
       posts = list_posts()
       assert Enum.count(posts) != 0
-      [%Post{body: body, title: title} | _] = posts
-      assert body != nil
-      assert title != nil
+      [%Post{body: body, title: title, comments: comments} | _] = posts
+      refute is_nil(body)
+      refute is_nil(title)
+      refute is_nil(comments)
     end
 
     test "get_post!/1 returns the post with given id" do
-      post = post_fixture()
-      assert get_post!(post.id) == post
+      new_post = post_fixture()
+      post = get_post!(new_post.id)
+      assert new_post.body == post.body
+      assert new_post.title == post.title
     end
 
     test "create_post/1 with valid data creates a post" do

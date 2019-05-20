@@ -2,7 +2,9 @@ defmodule Api.DraftTest do
   use Api.DataCase
 
   use Api.Blog
+  use Api.Accounts
   alias Api.Blog.Draft
+  alias Api.Accounts.User
 
   @valid_attrs %{body: "some body", title: "some title"}
   @update_attrs %{body: "some updated body", title: "some updated title"}
@@ -12,7 +14,7 @@ defmodule Api.DraftTest do
   describe "drafts" do
     def draft_fixture(attrs \\ %{}) do
 
-      %Api.Accounts.User{id: id} = Api.Accounts.list_users() |> List.first
+      %User{id: id} = list_users() |> List.first
 
       {:ok, draft} =
         attrs

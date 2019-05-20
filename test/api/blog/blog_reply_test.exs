@@ -6,14 +6,16 @@ defmodule Api.BlogTest do
   describe "replies" do
     alias Api.Blog.Reply
 
-    @valid_attrs %{comment: "some comment", name: "some name"}
-    @update_attrs %{comment: "some updated comment", name: "some updated name"}
-    @invalid_attrs %{comment: nil, name: nil}
+    @valid_attrs %{reply: "some comment", name: "some name"}
+    @update_attrs %{reply: "some updated comment", name: "some updated name"}
+    @invalid_attrs %{reply: nil, name: nil}
 
-    def reply_fixture(attrs \\ %{}) do
+    def reply_fixture() do
+      comment = list_comment() |> List.first
+
       {:ok, reply} =
-        attrs
-        |> Enum.into(@valid_attrs)
+        @valid_attrs
+        |> Enum.into(%{comment_id: comment.id})
         |> create_reply()
 
       reply
@@ -30,8 +32,8 @@ defmodule Api.BlogTest do
     end
 
     test "create_reply/1 with valid data creates a reply" do
-      assert {:ok, %Reply{} = reply} = create_reply(@valid_attrs)
-      assert reply.comment == "some comment"
+      reply = reply_fixture()
+      assert reply.reply == "some comment"
       assert reply.name == "some name"
     end
 
@@ -42,7 +44,7 @@ defmodule Api.BlogTest do
     test "update_reply/2 with valid data updates the reply" do
       reply = reply_fixture()
       assert {:ok, %Reply{} = reply} = update_reply(reply, @update_attrs)
-      assert reply.comment == "some updated comment"
+      assert reply.reply == "some updated comment"
       assert reply.name == "some updated name"
     end
 

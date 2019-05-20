@@ -9,6 +9,7 @@ defmodule Api.Blog.Comment do
     field :comment, :string
     field :name, :string
     belongs_to :post, Post
+    has_many :replies, Api.Blog.Reply
 
     timestamps()
   end

@@ -2,12 +2,12 @@
 
 alias Api.Repo
 use Api.Accounts
-alias Api.Blog.{Post, Comment}
-alias Bcrypt
+alias Api.Blog.{Post, Comment, Reply, Draft}
 
 """
   Repo.delete for clearing existing data and repopulating
 """
+Repo.delete_all(Reply)
 Repo.delete_all(Comment)
 Repo.delete_all(Post)
 Repo.delete_all(Accounts.User)
@@ -100,7 +100,7 @@ jw_posts = [
       }
     ]
   }
-] |> Enum.each(fn(post) -> 
+] |> Enum.each(fn(post) ->
   Ecto.build_assoc(jw, :posts, post) |> Repo.insert!
 end)
 
