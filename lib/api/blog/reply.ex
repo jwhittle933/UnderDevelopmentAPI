@@ -2,9 +2,12 @@ defmodule Api.Blog.Reply do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:id, :reply, :name, :comment_id]}
+
   schema "replies" do
-    field :comment, :string
+    field :reply, :string
     field :name, :string
+    belongs_to :comment, Api.Blog.Comment
 
     timestamps()
   end
@@ -12,7 +15,7 @@ defmodule Api.Blog.Reply do
   @doc false
   def changeset(reply, attrs) do
     reply
-    |> cast(attrs, [:comment, :name])
-    |> validate_required([:comment, :name])
+    |> cast(attrs, [:reply, :name, :comment_id])
+    |> validate_required([:comment_id, :reply, :name])
   end
 end

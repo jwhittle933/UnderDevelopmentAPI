@@ -1,8 +1,8 @@
 defmodule ApiWeb.CommentControllerTest do
   use ApiWeb.ConnCase
 
-  alias Api.Accounts
-  alias Api.Blog
+  use Api.Blog
+  alias Api.Blog.{Post, Comment}
   alias Poison
 
   @create_attrs %{
@@ -16,7 +16,7 @@ defmodule ApiWeb.CommentControllerTest do
   @invalid_attrs %{comment: nil, name: nil}
 
   def fixture(:comment) do
-    post = Api.Repo.all(Blog.Post) |> List.first
+    post = Api.Repo.all(Post) |> List.first
 
     Map.put(@create_attrs, :post_id, post.id)
   end
@@ -41,7 +41,7 @@ defmodule ApiWeb.CommentControllerTest do
   describe "create comment" do
     test "renders comment when data is valid", %{conn: conn} do
 
-      {:ok, comment} = create_comment()
+      {:ok, comment} = new_comment()
 
       {:ok, resp} =
       conn
@@ -89,7 +89,7 @@ defmodule ApiWeb.CommentControllerTest do
 
   describe "update comment" do
     test "renders comment when data is valid", %{conn: conn} do
-      with {:ok, %Blog.Comment{id: id} = comment} <- Blog.create_comment(@create_attrs) do
+      with {:ok, %Comment{id: id} = comment} <- create_comment(@create_attrs) do
         {:ok, resp} =
         conn
         |> put(Routes.comment_path(conn, :update, comment), comment: @update_attrs)
@@ -109,7 +109,7 @@ defmodule ApiWeb.CommentControllerTest do
     end
 
     test "sends errors when data is invalid", %{conn: conn} do
-      with {:ok, %Blog.Comment{id: id} = comment} <- Blog.create_comment(@create_attrs) do
+      with {:ok, %Comment{id: id} = comment} <- create_comment(@create_attrs) do
         {:ok, resp} =
         conn
         |> put(Routes.comment_path(conn, :update, comment), comment: @invalid_attrs)
@@ -127,8 +127,8 @@ defmodule ApiWeb.CommentControllerTest do
 
   describe "delete comment" do
     test "deletes chosen comment", %{conn: conn} do
-      {:ok, temp_comment} = create_comment()
-      {:ok, %Blog.Comment{} = comment} = Blog.create_comment(temp_comment)
+      {:ok, temp_comment} = new_comment()
+      {:ok, %Comment{} = comment} = create_comment(temp_comment)
 
       conn = delete(conn, Routes.comment_path(conn, :delete, comment))
       assert response(conn, 204)
@@ -136,7 +136,7 @@ defmodule ApiWeb.CommentControllerTest do
   end
 
 
-  defp create_comment() do
+  defp new_comment() do
     comment = fixture(:comment)
     {:ok, comment}
   end

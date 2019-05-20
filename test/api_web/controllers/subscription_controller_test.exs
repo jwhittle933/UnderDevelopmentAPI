@@ -1,8 +1,9 @@
 defmodule ApiWeb.SubscriptionControllerTest do
   use ApiWeb.ConnCase
 
-  alias Api.Accounts
+  use Api.Accounts
   alias Api.Accounts.Subscription
+  import ApiWeb.Helpers
 
   @create_attrs %{
     email: "some email",
@@ -15,8 +16,7 @@ defmodule ApiWeb.SubscriptionControllerTest do
   @invalid_attrs %{email: nil, name: nil}
 
   def fixture(:subscription) do
-    {:ok, subscription} = Accounts.create_subscription(@create_attrs)
-    subscription
+    subscription = create_subscription(@create_attrs)
   end
 
   setup %{conn: conn} do
@@ -25,55 +25,88 @@ defmodule ApiWeb.SubscriptionControllerTest do
 
   describe "index" do
     test "lists all subscription", %{conn: conn} do
-      conn = get(conn, Routes.subscription_path(conn, :index))
-      assert json_response(conn, 200)["data"] == []
+      {:ok, subscription} = fixture(:subscription)
+      %{"subscriptions" => subscriptions} =
+        conn
+        |> get(Routes.subscription_path(conn, :index))
+        |> get_resp_body
+
+      assert subscriptions |> List.first |> Map.fetch("email") == {:ok, "some email"}
+      assert subscriptions |> List.first |> Map.fetch("name") == {:ok, "some name"}
+      refute :error == subscriptions |> List.first |> Map.fetch("id")
     end
   end
 
   describe "create subscription" do
     test "renders subscription when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.subscription_path(conn, :create), subscription: @create_attrs)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      resp =
+        conn
+        |> post(Routes.subscription_path(conn, :create), subscription: @create_attrs)
+        |> get_resp_body
 
-      conn = get(conn, Routes.subscription_path(conn, :show, id))
+      assert resp["msg"] == "Thanks for subscribing."
+      assert %{
+        "id" => id,
+        "email" => "some email",
+        "name" => "some name"
+      } = resp["subscription"]
+
+      %{"subscription" => subscription} =
+        conn
+        |> get(Routes.subscription_path(conn, :show, id))
+        |> get_resp_body
+
 
       assert %{
                "id" => id,
                "email" => "some email",
                "name" => "some name"
-             } = json_response(conn, 200)["data"]
+             } = subscription
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.subscription_path(conn, :create), subscription: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+      %{"errors" => errors} =
+        conn
+        |> post(Routes.subscription_path(conn, :create), subscription: @invalid_attrs)
+        |> get_resp_body
+      assert errors != %{}
     end
   end
 
   describe "update subscription" do
-    setup [:create_subscription]
+    setup [:new_subscription]
 
     test "renders subscription when data is valid", %{conn: conn, subscription: %Subscription{id: id} = subscription} do
-      conn = put(conn, Routes.subscription_path(conn, :update, subscription), subscription: @update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      %{"subscription" => %{"id" => subscription_id}} =
+        conn
+        |> put(Routes.subscription_path(conn, :update, subscription), subscription: @update_attrs)
+        |> get_resp_body
 
-      conn = get(conn, Routes.subscription_path(conn, :show, id))
+      assert id == subscription_id
+
+      %{"subscription" => subscription} =
+        conn
+        |> get(Routes.subscription_path(conn, :show, id))
+        |> get_resp_body
 
       assert %{
-               "id" => id,
+               "id" => ^id,
                "email" => "some updated email",
                "name" => "some updated name"
-             } = json_response(conn, 200)["data"]
+             } = subscription
     end
 
     test "renders errors when data is invalid", %{conn: conn, subscription: subscription} do
-      conn = put(conn, Routes.subscription_path(conn, :update, subscription), subscription: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+      %{"errors" => errors} =
+        conn
+        |> put(Routes.subscription_path(conn, :update, subscription), subscription: @invalid_attrs)
+        |> get_resp_body
+      assert errors != %{}
     end
   end
 
   describe "delete subscription" do
-    setup [:create_subscription]
+    setup [:new_subscription]
 
     test "deletes chosen subscription", %{conn: conn, subscription: subscription} do
       conn = delete(conn, Routes.subscription_path(conn, :delete, subscription))
@@ -85,8 +118,8 @@ defmodule ApiWeb.SubscriptionControllerTest do
     end
   end
 
-  defp create_subscription(_) do
-    subscription = fixture(:subscription)
-    {:ok, subscription: subscription}
+  defp new_subscription(_) do
+    {:ok, subscription} = fixture(:subscription)
+    [subscription: subscription]
   end
 end

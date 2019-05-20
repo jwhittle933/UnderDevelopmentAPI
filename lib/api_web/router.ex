@@ -31,6 +31,8 @@ defmodule ApiWeb.Router do
     """
     resources "/posts", PostController, only: [:index, :show]
     resources "/comments", CommentController
+    resources "/replies", ReplyController
+    resources "/subscriptions", SubscriptionController
 
     @doc """
       Scope /api/auth for user login/logout

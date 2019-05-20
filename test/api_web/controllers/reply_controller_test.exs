@@ -1,7 +1,7 @@
 defmodule ApiWeb.ReplyControllerTest do
   use ApiWeb.ConnCase
 
-  alias Api.Blog
+  use Api.Blog
   alias Api.Blog.Reply
 
   @create_attrs %{
@@ -15,7 +15,7 @@ defmodule ApiWeb.ReplyControllerTest do
   @invalid_attrs %{comment: nil, name: nil}
 
   def fixture(:reply) do
-    {:ok, reply} = Blog.create_reply(@create_attrs)
+    {:ok, reply} = create_reply(@create_attrs)
     reply
   end
 
@@ -51,7 +51,7 @@ defmodule ApiWeb.ReplyControllerTest do
   end
 
   describe "update reply" do
-    setup [:create_reply]
+    setup [:new_reply]
 
     test "renders reply when data is valid", %{conn: conn, reply: %Reply{id: id} = reply} do
       conn = put(conn, Routes.reply_path(conn, :update, reply), reply: @update_attrs)
@@ -73,7 +73,7 @@ defmodule ApiWeb.ReplyControllerTest do
   end
 
   describe "delete reply" do
-    setup [:create_reply]
+    setup [:new_reply]
 
     test "deletes chosen reply", %{conn: conn, reply: reply} do
       conn = delete(conn, Routes.reply_path(conn, :delete, reply))
@@ -85,7 +85,7 @@ defmodule ApiWeb.ReplyControllerTest do
     end
   end
 
-  defp create_reply(_) do
+  defp new_reply(_) do
     reply = fixture(:reply)
     {:ok, reply: reply}
   end

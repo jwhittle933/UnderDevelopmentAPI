@@ -11,7 +11,7 @@ defmodule ApiWeb.Helpers do
     end)
   end
 
-  defp get_resp_body(resp) do
+  def get_resp_body(resp) do
     {:ok, body} = resp.resp_body |> decode
     body
   end

@@ -1,7 +1,7 @@
 defmodule ApiWeb.DraftControllerTest do
   use ApiWeb.ConnCase
 
-  alias Api.Blog
+  use Api.Blog
   alias Api.Blog.Draft
 
   @create_attrs %{
@@ -15,7 +15,7 @@ defmodule ApiWeb.DraftControllerTest do
   @invalid_attrs %{body: nil, title: nil}
 
   def fixture(:draft) do
-    {:ok, draft} = Blog.create_draft(@create_attrs)
+    {:ok, draft} = create_draft(@create_attrs)
     draft
   end
 
@@ -85,7 +85,7 @@ defmodule ApiWeb.DraftControllerTest do
     end
   end
 
-  defp create_draft(_) do
+  defp new_draft(_) do
     draft = fixture(:draft)
     {:ok, draft: draft}
   end

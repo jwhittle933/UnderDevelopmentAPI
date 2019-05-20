@@ -1,10 +1,10 @@
 defmodule ApiWeb.PostControllerTest do
   use ApiWeb.ConnCase
 
+  use Api.Accounts
+  use Api.Blog
   import Poison, only: [decode: 1]
   import Plug.Test
-  alias Api.Accounts
-  alias Api.Blog
   alias Api.Blog.Post
 
   @create_attrs %{
@@ -20,7 +20,7 @@ defmodule ApiWeb.PostControllerTest do
   @invalid_attrs %{body: nil, title: nil, visible: nil}
 
   def fixture(:user) do
-    Accounts.list_users |> List.first
+    list_users |> List.first
   end
 
   def fixture(:post) do
@@ -142,7 +142,7 @@ defmodule ApiWeb.PostControllerTest do
   end
 
   describe "update post" do
-    setup [:create_post]
+    setup [:new_post]
 
     test "renders post when data is valid", %{conn: conn, post: %Post{id: id} = post} do
       %{"post" => post} =
@@ -181,7 +181,7 @@ defmodule ApiWeb.PostControllerTest do
   end
 
   describe "delete post" do
-    setup [:create_post]
+    setup [:new_post]
 
     test "deletes chosen post", %{conn: conn, post: post} do
       resp =
@@ -197,8 +197,8 @@ defmodule ApiWeb.PostControllerTest do
     end
   end
 
-  defp create_post(_) do
-    {:ok, post} = fixture(:post) |> Blog.create_post
+  defp new_post(_) do
+    {:ok, post} = fixture(:post) |> create_post
     [post: post]
   end
 
