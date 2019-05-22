@@ -10,6 +10,5 @@ defmodule Api.Repo.Migrations.CreatePosts do
 
       timestamps()
     end
-
   end
 end

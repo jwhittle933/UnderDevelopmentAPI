@@ -11,7 +11,7 @@ defmodule Api.BlogTest do
     @invalid_attrs %{reply: nil, name: nil}
 
     def reply_fixture() do
-      comment = list_comment() |> List.first
+      comment = list_comment() |> List.first()
 
       {:ok, reply} =
         @valid_attrs

@@ -1,5 +1,4 @@
 defmodule Api.Blog.Fragments.Replies do
-
   import Ecto.Changeset
   alias Api.Repo
   alias Api.Blog.Reply
@@ -97,6 +96,4 @@ defmodule Api.Blog.Fragments.Replies do
   def change_reply(%Reply{} = reply) do
     Reply.changeset(reply, %{})
   end
-
-
 end

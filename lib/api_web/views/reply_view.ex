@@ -11,8 +11,6 @@ defmodule ApiWeb.ReplyView do
   end
 
   def render("reply.json", %{reply: reply}) do
-    %{id: reply.id,
-      comment: reply.comment,
-      name: reply.name}
+    %{id: reply.id, comment: reply.comment, name: reply.name}
   end
 end

@@ -8,7 +8,7 @@ defmodule ApiWeb.PostController do
 
   def index(conn, _params) do
     posts = list_posts()
-    json conn, %{posts: posts}
+    json(conn, %{posts: posts})
   end
 
   @doc """
@@ -25,7 +25,7 @@ defmodule ApiWeb.PostController do
 
   def show(conn, %{"id" => id}) do
     post = get_post!(id)
-    json conn, %{post: post}
+    json(conn, %{post: post})
   end
 
   @doc """
@@ -35,7 +35,7 @@ defmodule ApiWeb.PostController do
     post = get_post!(id)
 
     with {:ok, %Post{} = post} <- update_post(post, post_params) do
-      json conn, %{post: post}
+      json(conn, %{post: post})
     end
   end
 
@@ -49,5 +49,4 @@ defmodule ApiWeb.PostController do
       send_resp(conn, :no_content, "")
     end
   end
-
- end
+end

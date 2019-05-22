@@ -20,7 +20,7 @@ defmodule ApiWeb.PostControllerTest do
   @invalid_attrs %{body: nil, title: nil, visible: nil}
 
   def fixture(:user) do
-    list_users |> List.first
+    list_users |> List.first()
   end
 
   def fixture(:post) do
@@ -40,6 +40,7 @@ defmodule ApiWeb.PostControllerTest do
         |> get_resp_body
 
       refute is_nil(resp["posts"])
+
       Enum.each(resp["posts"], fn post ->
         refute is_nil(post["body"])
         refute is_nil(post["id"])
@@ -52,43 +53,46 @@ defmodule ApiWeb.PostControllerTest do
   describe "show" do
     test "show returns a single post", %{conn: conn} do
       valid_id = 190
+
       resp =
         conn
         |> get(Routes.post_path(conn, :show, valid_id))
         |> get_resp_body
 
       post = resp["post"]
-      assert %{
-        "id" => id,
-        "body" => _,
-        "comments" => comments,
-        "title" => _,
-        "featured_image" => _,
-        "inserted_at" => _,
-        "updated_at" => _,
-        "user" => user,
-        "visible" => _
-      } = post
 
       assert %{
-        "id" => _,
-        "name" => _
-      } = user
+               "id" => id,
+               "body" => _,
+               "comments" => comments,
+               "title" => _,
+               "featured_image" => _,
+               "inserted_at" => _,
+               "updated_at" => _,
+               "user" => user,
+               "visible" => _
+             } = post
+
+      assert %{
+               "id" => _,
+               "name" => _
+             } = user
 
       Enum.each(comments, fn comment ->
         assert %{
-          "comment" => _,
-          "id" => _,
-          "name" => _,
-          "post_id" => post_id
-        } = comment
+                 "comment" => _,
+                 "id" => _,
+                 "name" => _,
+                 "post_id" => post_id
+               } = comment
+
         assert post_id == id
       end)
     end
 
     test "show raises Ecto.NoResultsError with bad post_id" do
       assert_raise(Ecto.NoResultsError, fn ->
-          get(conn,Routes.post_path(conn, :show, 2000))
+        get(conn, Routes.post_path(conn, :show, 2000))
       end)
     end
   end
@@ -96,6 +100,7 @@ defmodule ApiWeb.PostControllerTest do
   describe "create post" do
     test "renders post when data is valid", %{conn: conn} do
       post = fixture(:post)
+
       resp =
         conn
         |> authenticate
@@ -103,26 +108,25 @@ defmodule ApiWeb.PostControllerTest do
         |> get_resp_body
 
       assert %{
-        "body" => "some body",
-        "id" => id,
-        "title" => "some title"
-      } = resp
+               "body" => "some body",
+               "id" => id,
+               "title" => "some title"
+             } = resp
 
       resp =
         conn
         |> get(Routes.post_path(conn, :show, id))
         |> get_resp_body
 
-
       assert %{
-        "body" => "some body",
-        "comments" => [],
-        "id" => ^id,
-        "featured_image" => _,
-        "title" => "some title",
-        "user" => %{"id" => _, "name" => "Test User"},
-        "visible" => _
-      } = resp["post"]
+               "body" => "some body",
+               "comments" => [],
+               "id" => ^id,
+               "featured_image" => _,
+               "title" => "some title",
+               "user" => %{"id" => _, "name" => "Test User"},
+               "visible" => _
+             } = resp["post"]
     end
 
     test "Returns errors when data is invalid", %{conn: conn} do
@@ -133,11 +137,11 @@ defmodule ApiWeb.PostControllerTest do
         |> get_resp_body
 
       assert %{
-        "body" => ["can't be blank"],
-        "title" => ["can't be blank"],
-        "user_id" => ["can't be blank"],
-        "visible" => ["can't be blank"]
-      } = errors
+               "body" => ["can't be blank"],
+               "title" => ["can't be blank"],
+               "user_id" => ["can't be blank"],
+               "visible" => ["can't be blank"]
+             } = errors
     end
   end
 
@@ -159,10 +163,10 @@ defmodule ApiWeb.PostControllerTest do
         |> get_resp_body
 
       assert %{
-        "id" => id,
-        "body" => "some updated body",
-        "title" => "some updated title"
-      } = resp["post"]
+               "id" => id,
+               "body" => "some updated body",
+               "title" => "some updated title"
+             } = resp["post"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, post: post} do
@@ -173,10 +177,10 @@ defmodule ApiWeb.PostControllerTest do
         |> get_resp_body
 
       assert %{
-        "body" => ["can't be blank"],
-        "title" => ["can't be blank"],
-        "visible" => ["can't be blank"]
-      } = errors
+               "body" => ["can't be blank"],
+               "title" => ["can't be blank"],
+               "visible" => ["can't be blank"]
+             } = errors
     end
   end
 

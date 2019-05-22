@@ -1,15 +1,17 @@
 defmodule ApiWeb.DraftController do
   use ApiWeb, :controller
 
-  use Api.Blog
+  use Api.Blog, :drafts
   alias Api.Blog.Draft
 
   action_fallback ApiWeb.FallbackController
 
   def index(conn, _params) do
-    user_id = get_session(:current_user_id)
+    user_id = get_session(conn, :current_user_id)
+    IO.puts('LOOK RIGHT HERE')
+    IO.puts(user_id)
     drafts = list_drafts(user_id)
-    json conn, %{drafts: drafts}
+    json(conn, %{drafts: drafts})
   end
 
   def create(conn, %{"draft" => draft_params}) do
@@ -23,14 +25,14 @@ defmodule ApiWeb.DraftController do
 
   def show(conn, %{"id" => id}) do
     draft = get_draft!(id)
-    json conn, %{draft: draft}
+    json(conn, %{draft: draft})
   end
 
   def update(conn, %{"id" => id, "draft" => draft_params}) do
     draft = get_draft!(id)
 
     with {:ok, %Draft{} = draft} <- update_draft(draft, draft_params) do
-      json conn, %{draft: draft}
+      json(conn, %{draft: draft})
     end
   end
 

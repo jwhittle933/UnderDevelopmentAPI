@@ -1,2 +1,2 @@
-defmodule ApiWeb.Helpers do
+defmodule ApiWeb.Test.Helpers do
 end

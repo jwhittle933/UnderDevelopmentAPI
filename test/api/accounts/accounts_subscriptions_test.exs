@@ -1,11 +1,9 @@
 defmodule Api.SubscriptionsTest do
-
   use Api.DataCase
   use Api.Accounts
   alias Api.Accounts.Subscription
 
-   describe "subscription" do
-
+  describe "subscription" do
     @valid_attrs %{
       email: "some email",
       name: "some name"
@@ -47,7 +45,10 @@ defmodule Api.SubscriptionsTest do
 
     test "update_subscription/2 with valid data updates the subscription" do
       subscription = subscription_fixture()
-      assert {:ok, %Subscription{} = subscription} = update_subscription(subscription, @update_attrs)
+
+      assert {:ok, %Subscription{} = subscription} =
+               update_subscription(subscription, @update_attrs)
+
       assert subscription.email == "some updated email"
       assert subscription.name == "some updated name"
     end
@@ -68,5 +69,5 @@ defmodule Api.SubscriptionsTest do
       subscription = subscription_fixture()
       assert %Ecto.Changeset{} = change_subscription(subscription)
     end
-   end
+  end
 end

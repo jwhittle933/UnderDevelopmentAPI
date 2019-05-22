@@ -1,5 +1,4 @@
 defmodule Api.Blog.Fragments.Posts do
-
   import Ecto.Query, warn: false
   import Ecto.Changeset
   alias Api.Repo
@@ -7,7 +6,7 @@ defmodule Api.Blog.Fragments.Posts do
   alias Api.Blog.Post
   alias Api.Accounts.User
 
-   @doc """
+  @doc """
   Returns the list of posts.
 
   ## Examples
@@ -19,7 +18,7 @@ defmodule Api.Blog.Fragments.Posts do
   def list_posts do
     Repo.all(Post)
     |> Repo.preload(:comments)
-    |> Repo.preload([user: from(u in User, select: %{id: u.id, name: u.name})])
+    |> Repo.preload(user: from(u in User, select: %{id: u.id, name: u.name}))
   end
 
   @doc """
@@ -39,7 +38,7 @@ defmodule Api.Blog.Fragments.Posts do
   def get_post!(id) do
     Repo.get!(Post, id)
     |> Repo.preload(:comments)
-    |> Repo.preload([user: from(u in User, select: %{id: u.id, name: u.name})])
+    |> Repo.preload(user: from(u in User, select: %{id: u.id, name: u.name}))
   end
 
   @doc """
@@ -55,9 +54,9 @@ defmodule Api.Blog.Fragments.Posts do
 
   """
   def create_post(attrs \\ %{}) do
-      %Post{}
-      |> Post.changeset(attrs)
-      |> Repo.insert()
+    %Post{}
+    |> Post.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
@@ -93,5 +92,4 @@ defmodule Api.Blog.Fragments.Posts do
   def delete_post(%Post{} = post) do
     Repo.delete(post)
   end
-
 end

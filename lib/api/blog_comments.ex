@@ -1,10 +1,9 @@
 defmodule Api.Blog.Fragments.Comments do
-
   import Ecto.Changeset
   alias Api.Repo
   alias Api.Blog.{Comment, Post}
 
-   @doc """
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking post changes.
 
   ## Examples
@@ -46,7 +45,7 @@ defmodule Api.Blog.Fragments.Comments do
       ** (Ecto.NoResultsError)
 
   """
-  def get_comment!(id), do: Repo.get!(Comment,  id)
+  def get_comment!(id), do: Repo.get!(Comment, id)
 
   @doc """
   Creates a comment.
@@ -63,9 +62,8 @@ defmodule Api.Blog.Fragments.Comments do
   def create_comment(attrs \\ %{}) do
     %Comment{}
     |> Comment.changeset(attrs)
-    |> Repo.insert
+    |> Repo.insert()
   end
-
 
   @doc """
   Updates a comment.
@@ -113,6 +111,4 @@ defmodule Api.Blog.Fragments.Comments do
   def change_comment(%Comment{} = comment) do
     Comment.changeset(comment, %{})
   end
-
-
 end

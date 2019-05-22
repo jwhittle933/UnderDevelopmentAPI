@@ -8,6 +8,5 @@ defmodule Api.Repo.Migrations.CreateSubscription do
 
       timestamps()
     end
-
   end
 end

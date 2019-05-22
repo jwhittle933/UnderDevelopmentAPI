@@ -1,5 +1,4 @@
 defmodule ApiWeb.AuthControllerTest do
-
   import Plug.Test
   use ApiWeb.ConnCase
   alias Plug.Conn
@@ -44,7 +43,6 @@ defmodule ApiWeb.AuthControllerTest do
 
   describe "Logout" do
     test "Logout drops session", %{conn: conn} do
-
       resp =
         conn
         |> init_test_session(current_user_id: 100)
@@ -57,10 +55,8 @@ defmodule ApiWeb.AuthControllerTest do
     end
   end
 
-
   defp get_msg(resp) do
-    {:ok, resp_body} = resp.resp_body |> Poison.decode
+    {:ok, resp_body} = resp.resp_body |> Poison.decode()
     resp_body["msg"]
   end
-
 end

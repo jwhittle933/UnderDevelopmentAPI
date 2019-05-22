@@ -9,6 +9,5 @@ defmodule Api.Repo.Migrations.CreateComment do
 
       timestamps()
     end
-
   end
 end

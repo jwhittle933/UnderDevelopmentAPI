@@ -1,5 +1,4 @@
 defmodule ApiWeb.FallbackController do
-
   @moduledoc """
   Translates controller action results into valid `Plug.Conn` responses.
 
@@ -10,6 +9,7 @@ defmodule ApiWeb.FallbackController do
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     errors = get_errors(changeset)
+
     conn
     |> put_status(:unprocessable_entity)
     |> json(%{errors: errors})

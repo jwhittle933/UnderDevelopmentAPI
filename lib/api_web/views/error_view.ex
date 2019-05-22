@@ -20,5 +20,4 @@ defmodule ApiWeb.ErrorView do
       errors: Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
     }
   end
-
 end

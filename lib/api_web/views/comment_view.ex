@@ -11,8 +11,6 @@ defmodule ApiWeb.CommentView do
   end
 
   def render("comment.json", %{comment: comment}) do
-    %{id: comment.id,
-      name: comment.name,
-      comment: comment.comment}
+    %{id: comment.id, name: comment.name, comment: comment.comment}
   end
 end

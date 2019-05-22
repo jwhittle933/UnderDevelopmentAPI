@@ -8,7 +8,7 @@ defmodule ApiWeb.UserController do
 
   def index(conn, _params) do
     users = list_users()
-    json conn, %{users: users}
+    json(conn, %{users: users})
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -22,14 +22,14 @@ defmodule ApiWeb.UserController do
 
   def show(conn, %{"id" => id}) do
     user = get_user(id)
-    json conn, %{user: user}
+    json(conn, %{user: user})
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = get_user(id)
 
     with {:ok, %User{} = user} <- update_user(user, user_params) do
-      json conn, %{user: user}
+      json(conn, %{user: user})
     end
   end
 
@@ -43,5 +43,4 @@ defmodule ApiWeb.UserController do
 
   # hash = Bcrypt.hash_pwd_salt("password")
   # Bcrypt.verify_pass("password", hash)
-
 end

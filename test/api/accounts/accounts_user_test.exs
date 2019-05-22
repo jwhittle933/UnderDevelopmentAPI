@@ -25,10 +25,11 @@ defmodule Api.AccountsTest do
         attrs
         |> Enum.into(@valid_attrs)
         |> create_user()
+
       user
     end
 
-    def invalid_user_fixture(attrs \\ %{}) do 
+    def invalid_user_fixture(attrs \\ %{}) do
       {:ok, invalid_user} =
         attrs
         |> Enum.into(@invalid_attrs)
@@ -36,7 +37,6 @@ defmodule Api.AccountsTest do
 
       invalid_user
     end
-
 
     test "list_users/0 returns all users" do
       user = user_fixture()
@@ -84,7 +84,6 @@ defmodule Api.AccountsTest do
 
   defp get_resp_body(conn) do
     {:ok, conn} = Map.fetch(conn, :resp_body)
-    conn |> Poison.decode
+    conn |> Poison.decode()
   end
-
 end

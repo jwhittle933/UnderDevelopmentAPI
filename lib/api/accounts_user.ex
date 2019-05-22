@@ -1,5 +1,4 @@
 defmodule Api.Accounts.Fragments.Users do
-
   @moduledoc """
   Context Module for Users.
   """
@@ -8,7 +7,7 @@ defmodule Api.Accounts.Fragments.Users do
   alias Api.Repo
   alias Api.Accounts.User
 
- @doc """
+  @doc """
   Returns the list of users.
 
   ## Examples
@@ -73,7 +72,6 @@ defmodule Api.Accounts.Fragments.Users do
     |> Repo.insert()
   end
 
-
   @doc """
   Updates a user.
 
@@ -120,5 +118,4 @@ defmodule Api.Accounts.Fragments.Users do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
-
 end

@@ -11,8 +11,6 @@ defmodule ApiWeb.SubscriptionView do
   end
 
   def render("subscription.json", %{subscription: subscription}) do
-    %{id: subscription.id,
-      name: subscription.name,
-      email: subscription.email}
+    %{id: subscription.id, name: subscription.name, email: subscription.email}
   end
 end

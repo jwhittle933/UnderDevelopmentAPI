@@ -10,6 +10,5 @@ defmodule Api.Repo.Migrations.CreateDrafts do
 
       timestamps()
     end
-
   end
 end
