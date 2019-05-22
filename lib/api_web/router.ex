@@ -34,6 +34,8 @@ defmodule ApiWeb.Router do
     resources "/comments", CommentController
     resources "/replies", ReplyController
     resources "/subscriptions", SubscriptionController
+    # resources "/drafts", DraftController TESTING WORKS HERE
+
 
     @doc """
       Scope /api/auth for user login/logout
@@ -62,7 +64,7 @@ defmodule ApiWeb.Router do
       pipe_through :auth
       resources "/", UserController
       resources "/posts", PostController, only: [:create, :update, :delete]
-      resources "/drafts", DraftController
+      resources "/drafts", DraftController # :index fails, calls :show from user_controller
     end
   end
 end
