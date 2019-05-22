@@ -14,7 +14,7 @@ defmodule Api.Blog.Fragments.Drafts do
 
   """
   def list_drafts(id) do
-    Repo.all(Draft, [user_id: id])
+    Repo.get_by(Draft, user_id: id)
   end
 
   @doc """

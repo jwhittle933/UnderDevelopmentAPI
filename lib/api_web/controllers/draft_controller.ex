@@ -7,9 +7,11 @@ defmodule ApiWeb.DraftController do
   action_fallback ApiWeb.FallbackController
 
   def index(conn, _params) do
-    user_id = get_session(:current_user_id)
+    user_id = get_session(conn, :current_user_id)
+    IO.puts 'LOOK RIGHT HERE'
+    IO.puts user_id
     drafts = list_drafts(user_id)
-    json conn, %{drafts: drafts}
+    json(conn, %{drafts: drafts})
   end
 
   def create(conn, %{"draft" => draft_params}) do
