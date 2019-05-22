@@ -81,7 +81,6 @@ defmodule ApiWeb.DraftControllerTest do
 
   describe "update draft" do
     setup [:new_draft]
-    @tag :skip
     test "renders draft when data is valid", %{conn: conn, draft: %Draft{id: id} = draft} do
       resp =
         conn
