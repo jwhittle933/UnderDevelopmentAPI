@@ -8,13 +8,13 @@ defmodule Api.PostTest do
     alias Api.Accounts.User
 
     @valid_attrs %{
-      body: "some body", 
+      body: "some body",
       title: "some title",
       featured_image: "image",
-      visible: true,
+      visible: true
     }
     @update_attrs %{
-      body: "some updated body", 
+      body: "some updated body",
       title: "some updated title",
       featured_image: "another image",
       visible: false
@@ -22,11 +22,9 @@ defmodule Api.PostTest do
     @invalid_attrs %{body: nil, title: nil, visible: nil}
 
     def post_fixture(attrs \\ %{}) do
-
       %Api.Accounts.User{id: id} =
         Api.Repo.all(User)
-        |> List.first
-
+        |> List.first()
 
       {:ok, post} =
         attrs

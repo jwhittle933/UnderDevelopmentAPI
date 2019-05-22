@@ -1,5 +1,4 @@
 defmodule ApiWeb.Helpers do
-
   import Ecto.Changeset, only: [traverse_errors: 2]
   import Poison
 
@@ -15,7 +14,4 @@ defmodule ApiWeb.Helpers do
     {:ok, body} = resp.resp_body |> decode
     body
   end
-
-
-
 end

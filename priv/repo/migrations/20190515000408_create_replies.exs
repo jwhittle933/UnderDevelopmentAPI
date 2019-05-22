@@ -9,6 +9,5 @@ defmodule Api.Repo.Migrations.CreateReplies do
 
       timestamps()
     end
-
   end
 end

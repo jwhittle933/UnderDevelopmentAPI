@@ -4,10 +4,9 @@ defmodule ApiWeb.CommentController do
   use Api.Blog
   alias Api.Blog.Comment
 
-
   def index(conn, _params) do
     comment = list_comment()
-    json conn, %{comment: comment}
+    json(conn, %{comment: comment})
   end
 
   def create(conn, %{"comment" => comment_params}) do
@@ -19,10 +18,12 @@ defmodule ApiWeb.CommentController do
     else
       {:error, %Ecto.Changeset{} = %{errors: errors}} ->
         resp = get_errors(%{}, errors)
+
         conn
         |> put_status(:unprocessable_entity)
         |> put_resp_header("content-type", "application/json")
         |> json(%{errors: resp})
+
       _ ->
         conn
         |> put_status(:internal_server_error)
@@ -48,14 +49,16 @@ defmodule ApiWeb.CommentController do
     comment = get_comment!(id)
 
     with {:ok, %Comment{} = comment} <- update_comment(comment, comment_params) do
-      json conn, %{comment: comment}
+      json(conn, %{comment: comment})
     else
       {:error, %Ecto.Changeset{} = %{errors: errors}} ->
         resp = get_errors(%{}, errors)
+
         conn
         |> put_status(:unprocessable_entity)
         |> put_resp_header("content-type", "application/json")
         |> json(%{errors: resp})
+
       _ ->
         conn
         |> put_status(:internal_server_error)
@@ -70,5 +73,4 @@ defmodule ApiWeb.CommentController do
       send_resp(conn, :no_content, "")
     end
   end
-
 end

@@ -1,5 +1,4 @@
 defmodule Api.Accounts.Fragments.Subscriptions do
-
   alias Api.Repo
   alias Api.Accounts.Subscription
 

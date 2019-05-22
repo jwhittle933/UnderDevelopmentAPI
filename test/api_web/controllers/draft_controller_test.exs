@@ -18,7 +18,7 @@ defmodule ApiWeb.DraftControllerTest do
   @invalid_attrs %{body: nil, title: nil}
 
   def fixture(:user) do
-    user = list_users |> List.first
+    user = list_users |> List.first()
   end
 
   def fixture(:draft) do
@@ -31,7 +31,6 @@ defmodule ApiWeb.DraftControllerTest do
   end
 
   describe "index" do
-    @tag :skip
     test "lists all drafts", %{conn: conn} do
       resp =
         conn
@@ -39,7 +38,7 @@ defmodule ApiWeb.DraftControllerTest do
         |> get(Routes.draft_path(conn, :index))
         |> get_resp_body
 
-      IO.inspect resp
+      IO.inspect(resp)
 
       # assert json_response(conn, 200)["data"] == []
     end
@@ -48,6 +47,7 @@ defmodule ApiWeb.DraftControllerTest do
   describe "create draft" do
     test "renders draft when data is valid", %{conn: conn} do
       draft = fixture(:draft)
+
       %{"draft" => draft} =
         conn
         |> authenticate
@@ -72,61 +72,61 @@ defmodule ApiWeb.DraftControllerTest do
     test "renders errors when data is invalid", %{conn: conn} do
       %{"errors" => errors} =
         conn
-          |> authenticate
-          |> post(Routes.draft_path(conn, :create), draft: @invalid_attrs)
-          |> get_resp_body
+        |> authenticate
+        |> post(Routes.draft_path(conn, :create), draft: @invalid_attrs)
+        |> get_resp_body
+
       assert errors != %{}
     end
   end
 
   describe "update draft" do
     setup [:new_draft]
+
     test "renders draft when data is valid", %{conn: conn, draft: %Draft{id: id} = draft} do
-      resp =
+      %{"draft" => draft} =
         conn
         |> authenticate
         |> put(Routes.draft_path(conn, :update, draft), draft: @update_attrs)
         |> get_resp_body
 
-      IO.inspect resp
-      # assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      assert %{"id" => ^id} = draft
 
-      resp =
+      %{"draft" => draft} =
         conn
         |> authenticate
         |> get(Routes.draft_path(conn, :show, id))
         |> get_resp_body
 
-      IO.inspect resp
-
-      # assert %{
-      #          "id" => id,
-      #          "body" => "some updated body",
-      #          "title" => "some updated title"
-      #        } = json_response(conn, 200)["data"]
+      assert %{
+               "id" => id,
+               "body" => "some updated body",
+               "title" => "some updated title"
+             } = draft
     end
-    @tag :skip
+
     test "renders errors when data is invalid", %{conn: conn, draft: draft} do
-      resp =
+      %{"errors" => errors} =
         conn
         |> authenticate
         |> put(Routes.draft_path(conn, :update, draft), draft: @invalid_attrs)
         |> get_resp_body
 
-      IO.inspect resp
-      # assert json_response(conn, 422)["errors"] != %{}
+      assert errors != %{}
     end
   end
 
   describe "delete draft" do
     setup [:new_draft]
-    @tag :skip
+
     test "deletes chosen draft", %{conn: conn, draft: draft} do
       resp =
         conn
         |> authenticate
         |> delete(Routes.draft_path(conn, :delete, draft))
-      assert response(conn, 204)
+
+      assert resp.status == 204
+      assert resp.resp_body == ""
 
       assert_error_sent 404, fn ->
         conn |> authenticate |> get(Routes.draft_path(conn, :show, draft))
@@ -135,7 +135,7 @@ defmodule ApiWeb.DraftControllerTest do
   end
 
   defp new_draft(_) do
-    draft = fixture(:draft)
+    {:ok, draft} = fixture(:draft) |> create_draft()
     [draft: draft]
   end
 
@@ -143,5 +143,4 @@ defmodule ApiWeb.DraftControllerTest do
     %{id: id} = fixture(:user)
     conn |> init_test_session(current_user_id: id)
   end
-
 end

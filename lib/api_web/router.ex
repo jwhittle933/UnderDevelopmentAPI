@@ -24,6 +24,7 @@ defmodule ApiWeb.Router do
 
   scope "/api", ApiWeb do
     pipe_through :api
+
     @doc """
       api requests to /api/comments or /api/posts @ :index, :show
       need no auth. This is for general readership
@@ -63,6 +64,5 @@ defmodule ApiWeb.Router do
       resources "/posts", PostController, only: [:create, :update, :delete]
       resources "/drafts", DraftController
     end
-
   end
 end

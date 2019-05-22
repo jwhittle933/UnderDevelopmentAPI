@@ -10,11 +10,9 @@ defmodule Api.DraftTest do
   @update_attrs %{body: "some updated body", title: "some updated title"}
   @invalid_attrs %{body: nil, title: nil}
 
-
   describe "drafts" do
     def draft_fixture(attrs \\ %{}) do
-
-      %User{id: id} = list_users() |> List.first
+      %User{id: id} = list_users() |> List.first()
 
       {:ok, draft} =
         attrs
@@ -69,5 +67,4 @@ defmodule Api.DraftTest do
       assert %Ecto.Changeset{} = change_draft(draft)
     end
   end
-
 end

@@ -11,8 +11,6 @@ defmodule ApiWeb.DraftView do
   end
 
   def render("draft.json", %{draft: draft}) do
-    %{id: draft.id,
-      body: draft.body,
-      title: draft.title}
+    %{id: draft.id, body: draft.body, title: draft.title}
   end
 end

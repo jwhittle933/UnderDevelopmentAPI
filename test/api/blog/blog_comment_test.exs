@@ -12,12 +12,12 @@ defmodule Api.CommentTest do
     password: "a password",
     admin: false,
     posts: [
-      %Post {
+      %Post{
         title: "a post",
         body: "a really long post",
         featured_image: "s3 somewhere",
         comments: [
-          %Comment {
+          %Comment{
             name: "a mean person",
             comment: "this was not good."
           }
@@ -28,16 +28,16 @@ defmodule Api.CommentTest do
 
   @valid_attrs %{
     comment: "some comment",
-    name: "some name",
+    name: "some name"
   }
   @update_attrs %{
     comment: "some updated comment",
-    name: "some updated name",
+    name: "some updated name"
   }
   @invalid_attrs %{comment: nil, name: nil}
 
   defp fixture(_) do
-    {:ok, user} = @fixture |> Repo.insert
+    {:ok, user} = @fixture |> Repo.insert()
 
     post = List.first(user.posts)
     comments = post.comments
@@ -47,7 +47,6 @@ defmodule Api.CommentTest do
   end
 
   describe "comment" do
-
     setup :fixture
 
     test "list_comment/0 returns all comment" do
@@ -97,5 +96,4 @@ defmodule Api.CommentTest do
       assert %Ecto.Changeset{} = change_comment(comment)
     end
   end
-
 end

@@ -1,10 +1,9 @@
 defmodule Api.Blog.Fragments.Drafts do
-
   import Ecto.Changeset
   alias Api.Repo
   alias Api.Blog.Draft
 
-   @doc """
+  @doc """
   Returns the list of drafts.
 
   ## Examples
@@ -97,7 +96,4 @@ defmodule Api.Blog.Fragments.Drafts do
   def change_draft(%Draft{} = draft) do
     Draft.changeset(draft, %{})
   end
-
-
-
 end

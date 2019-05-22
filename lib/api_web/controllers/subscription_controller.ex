@@ -8,6 +8,7 @@ defmodule ApiWeb.SubscriptionController do
 
   def index(conn, _params) do
     subscriptions = list_subscription()
+
     conn
     |> json(%{subscriptions: subscriptions})
   end
@@ -31,7 +32,8 @@ defmodule ApiWeb.SubscriptionController do
   def update(conn, %{"id" => id, "subscription" => subscription_params}) do
     subscription = get_subscription!(id)
 
-    with {:ok, %Subscription{} = subscription} <- update_subscription(subscription, subscription_params) do
+    with {:ok, %Subscription{} = subscription} <-
+           update_subscription(subscription, subscription_params) do
       conn |> json(%{subscription: subscription})
     end
   end
