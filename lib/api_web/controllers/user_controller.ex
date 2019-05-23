@@ -40,7 +40,4 @@ defmodule ApiWeb.UserController do
       send_resp(conn, :no_content, "")
     end
   end
-
-  # hash = Bcrypt.hash_pwd_salt("password")
-  # Bcrypt.verify_pass("password", hash)
 end

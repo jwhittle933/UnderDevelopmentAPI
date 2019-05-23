@@ -1,7 +1,9 @@
 defmodule Api.Blog.Fragments.Drafts do
   import Ecto.Changeset
+  import Ecto.Query, only: [from: 2]
   alias Api.Repo
   alias Api.Blog.Draft
+
 
   @doc """
   Returns the list of drafts.
@@ -13,7 +15,8 @@ defmodule Api.Blog.Fragments.Drafts do
 
   """
   def list_drafts(id) do
-    Repo.get_by(Draft, user_id: id)
+    from(d in Draft, where: d.user_id == ^id)
+    |> Repo.all()
   end
 
   @doc """

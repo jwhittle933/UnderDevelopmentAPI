@@ -8,8 +8,6 @@ defmodule ApiWeb.DraftController do
 
   def index(conn, _params) do
     user_id = get_session(conn, :current_user_id)
-    IO.puts('LOOK RIGHT HERE')
-    IO.puts(user_id)
     drafts = list_drafts(user_id)
     json(conn, %{drafts: drafts})
   end
