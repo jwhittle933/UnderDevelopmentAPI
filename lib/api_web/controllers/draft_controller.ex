@@ -6,10 +6,17 @@ defmodule ApiWeb.DraftController do
 
   action_fallback ApiWeb.FallbackController
 
-  def index(conn, _params) do
-    user_id = get_session(conn, :current_user_id)
-    drafts = list_drafts(user_id)
-    json(conn, %{drafts: drafts})
+  def index(conn, %{"user_id" => user_id}) do
+    with user_id <- get_session(conn, :current_user_id) do
+      drafts = list_drafts(user_id)
+      json(conn, %{drafts: drafts})
+    else
+      _ ->
+        conn
+        |> put_status(:unathorized)
+        |> put_resp_header("content-type", "application/json")
+        |> json(%{msg: "You are not authorized to view this draft."})
+    end
   end
 
   def create(conn, %{"draft" => draft_params}) do
