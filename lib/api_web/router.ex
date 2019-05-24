@@ -34,7 +34,8 @@ defmodule ApiWeb.Router do
     resources "/comments", CommentController
     resources "/replies", ReplyController
     resources "/subscriptions", SubscriptionController
-
+    get "/author", UserController, :author
+    get "/authors", UserController, :authors
 
     @doc """
       Access to these endpoints will be controlled by UI

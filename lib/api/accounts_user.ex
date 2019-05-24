@@ -118,4 +118,14 @@ defmodule Api.Accounts.Fragments.Users do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  def list_authors() do
+    query = from u in User, select: %{id: u.id, name: u.name, bio: u.bio}
+    Repo.all(query)
+  end
+
+  def get_author(id) do
+    query = from u in User, where: u.id == ^id, select: %{id: u.id, name: u.name, bio: u.bio}
+    Repo.one(query)
+  end
 end

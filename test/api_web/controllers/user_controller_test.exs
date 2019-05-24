@@ -56,7 +56,7 @@ defmodule ApiWeb.UserControllerTest do
   end
 
   describe "update user" do
-    setup [:create_user]
+    setup [:new_user]
 
     test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
@@ -79,7 +79,7 @@ defmodule ApiWeb.UserControllerTest do
   end
 
   describe "delete user" do
-    setup [:create_user]
+    setup [:new_user]
 
     test "deletes chosen user", %{conn: conn, user: user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))

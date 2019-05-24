@@ -8,7 +8,10 @@ defmodule ApiWeb.UserController do
 
   def index(conn, _params) do
     users = list_users()
-    json(conn, %{users: users})
+    conn
+    |> put_status(:ok)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{users: users})
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -39,5 +42,24 @@ defmodule ApiWeb.UserController do
     with {:ok, %User{}} <- delete_user(user) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  def author(conn, _params) do
+  end
+
+  def authors(conn, _params) do
+    authors = get_list_authors()
+    conn
+    |> put_status(:ok)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{authors: authors})
+  end
+
+  defp get_single_author do
+
+  end
+
+  defp get_list_authors do
+    %{name: name, id: id, bio: bio} = list_users()
   end
 end

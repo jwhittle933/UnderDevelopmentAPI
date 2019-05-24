@@ -2,8 +2,9 @@ defmodule ApiWeb.SubscriptionControllerTest do
   use ApiWeb.ConnCase
 
   use Api.Accounts
-  alias Api.Accounts.Subscription
   import ApiWeb.Helpers
+  alias Api.Accounts.Subscription
+  alias Plug.Conn
 
   @create_attrs %{
     email: "some email",
