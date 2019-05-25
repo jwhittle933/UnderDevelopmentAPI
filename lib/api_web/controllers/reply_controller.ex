@@ -8,7 +8,10 @@ defmodule ApiWeb.ReplyController do
 
   def index(conn, _params) do
     replies = list_replies()
-    render(conn, "index.json", replies: replies)
+    conn
+    |> put_status(:ok)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{replies: replies})
   end
 
   def create(conn, %{"reply" => reply_params}) do
@@ -16,13 +19,16 @@ defmodule ApiWeb.ReplyController do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", 'application/json')
-      |> render("show.json", reply: reply)
+      |> json(%{reply: reply})
     end
   end
 
   def show(conn, %{"id" => id}) do
     reply = get_reply!(id)
-    render(conn, "show.json", reply: reply)
+    conn
+    |> put_status(:ok)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{reply: reply})
   end
 
   def update(conn, %{"id" => id, "reply" => reply_params}) do

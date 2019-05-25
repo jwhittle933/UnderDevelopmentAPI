@@ -8,7 +8,10 @@ defmodule ApiWeb.UserController do
 
   def index(conn, _params) do
     users = list_users()
-    json(conn, %{users: users})
+    conn
+    |> put_status(:ok)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{users: users})
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -16,20 +19,24 @@ defmodule ApiWeb.UserController do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
-      |> send_resp(200, user: user)
+      |> json(%{user: user})
     end
   end
 
   def show(conn, %{"id" => id}) do
-    user = get_user(id)
-    json(conn, %{user: user})
+    with %User{} = user <- get_user(id) do
+      conn
+      |> put_status(:ok)
+      |> put_resp_header("content-type", "application/json")
+      |> json(%{user: user})
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = get_user(id)
 
     with {:ok, %User{} = user} <- update_user(user, user_params) do
-      json(conn, %{user: user})
+      conn |> json(%{user: user})
     end
   end
 
@@ -41,6 +48,23 @@ defmodule ApiWeb.UserController do
     end
   end
 
-  # hash = Bcrypt.hash_pwd_salt("password")
-  # Bcrypt.verify_pass("password", hash)
+  def author(conn, %{"id" => id}) do
+    author = get_author(id)
+    conn
+    |> put_status(:ok)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{author: author})
+  end
+
+  def authors(conn, _params) do
+    authors = list_authors()
+    conn
+    |> put_status(:ok)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{authors: authors})
+  end
+
+  defp get_list_authors do
+    %{name: name, id: id, bio: bio} = list_users()
+  end
 end

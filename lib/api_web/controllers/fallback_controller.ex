@@ -20,4 +20,10 @@ defmodule ApiWeb.FallbackController do
     |> put_status(:not_found)
     |> json(%{error: "not found"})
   end
+
+  def call(conn, nil) do
+    conn
+    |> put_status(:not_found)
+    |> json(%{error: "Not Found."})
+  end
 end

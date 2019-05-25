@@ -3,9 +3,10 @@ defmodule ApiWeb.PostControllerTest do
 
   use Api.Accounts
   use Api.Blog
-  import Poison, only: [decode: 1]
   import Plug.Test
+  import ApiWeb.Helpers
   alias Api.Blog.Post
+  alias Plug.Conn
 
   @create_attrs %{
     body: "some body",
@@ -29,6 +30,7 @@ defmodule ApiWeb.PostControllerTest do
   end
 
   setup %{conn: conn} do
+    conn = conn |> authenticate
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
@@ -103,8 +105,7 @@ defmodule ApiWeb.PostControllerTest do
 
       resp =
         conn
-        |> authenticate
-        |> post(Routes.post_path(conn, :create, %{post: post}))
+        |> post(Routes.user_post_path(conn, :create, user_id(conn), %{post: post}))
         |> get_resp_body
 
       assert %{
@@ -132,8 +133,7 @@ defmodule ApiWeb.PostControllerTest do
     test "Returns errors when data is invalid", %{conn: conn} do
       %{"errors" => errors} =
         conn
-        |> authenticate
-        |> post(Routes.post_path(conn, :create), post: @invalid_attrs)
+        |> post(Routes.user_post_path(conn, :create, user_id(conn)), post: @invalid_attrs)
         |> get_resp_body
 
       assert %{
@@ -151,8 +151,7 @@ defmodule ApiWeb.PostControllerTest do
     test "renders post when data is valid", %{conn: conn, post: %Post{id: id} = post} do
       %{"post" => post} =
         conn
-        |> authenticate
-        |> put(Routes.post_path(conn, :update, post), post: @update_attrs)
+        |> put(Routes.user_post_path(conn, :update, user_id(conn), post), post: @update_attrs)
         |> get_resp_body
 
       assert %{"id" => id} = post
@@ -172,8 +171,7 @@ defmodule ApiWeb.PostControllerTest do
     test "renders errors when data is invalid", %{conn: conn, post: post} do
       %{"errors" => errors} =
         conn
-        |> authenticate
-        |> put(Routes.post_path(conn, :update, post), post: @invalid_attrs)
+        |> put(Routes.user_post_path(conn, :update, user_id(conn), post), post: @invalid_attrs)
         |> get_resp_body
 
       assert %{
@@ -190,8 +188,7 @@ defmodule ApiWeb.PostControllerTest do
     test "deletes chosen post", %{conn: conn, post: post} do
       resp =
         conn
-        |> authenticate
-        |> delete(Routes.post_path(conn, :delete, post))
+        |> delete(Routes.user_post_path(conn, :delete, user_id(conn), post))
 
       assert resp.status == 204
 
@@ -206,13 +203,12 @@ defmodule ApiWeb.PostControllerTest do
     [post: post]
   end
 
-  defp get_resp_body(resp) do
-    {:ok, body} = resp.resp_body |> decode
-    body
+  defp user_id(conn) do
+    conn.assigns.user.id
   end
 
   defp authenticate(conn) do
     %{id: id} = fixture(:user)
-    conn |> init_test_session(current_user_id: id)
+    conn |> init_test_session(current_user_id: id) |> Conn.assign(:user, %{id: id})
   end
 end

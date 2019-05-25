@@ -3,9 +3,10 @@ defmodule ApiWeb.DraftControllerTest do
 
   use Api.Blog
   use Api.Accounts
-  alias Api.Blog.Draft
-  import Plug.Test
   import ApiWeb.Helpers
+  import Plug.Test
+  alias Api.Blog.Draft
+  alias Plug.Conn
 
   @create_attrs %{
     body: "some body",
@@ -27,20 +28,22 @@ defmodule ApiWeb.DraftControllerTest do
   end
 
   setup %{conn: conn} do
+    conn = conn |> authenticate
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
   describe "index" do
+    setup [:new_draft]
+
     test "lists all drafts", %{conn: conn} do
-      resp =
+      %{"drafts" => drafts} =
         conn
-        |> authenticate
-        |> get(Routes.draft_path(conn, :index))
+        |> get(Routes.user_draft_path(conn, :index, user_id(conn)))
         |> get_resp_body
 
-      IO.inspect(resp)
-
-      # assert json_response(conn, 200)["data"] == []
+      assert is_list(drafts)
+      assert %{"body" => "some body", "title" => "some title", "user_id" => id} = drafts |> List.first
+      refute is_nil(id)
     end
   end
 
@@ -50,16 +53,14 @@ defmodule ApiWeb.DraftControllerTest do
 
       %{"draft" => draft} =
         conn
-        |> authenticate
-        |> post(Routes.draft_path(conn, :create), draft: draft)
+        |> post(Routes.user_draft_path(conn, :create, user_id(conn)), draft: draft)
         |> get_resp_body
 
       assert %{"id" => id} = draft
 
       %{"draft" => draft} =
         conn
-        |> authenticate
-        |> get(Routes.draft_path(conn, :show, id))
+        |> get(Routes.user_draft_path(conn, :show, user_id(conn), id))
         |> get_resp_body
 
       assert %{
@@ -72,8 +73,7 @@ defmodule ApiWeb.DraftControllerTest do
     test "renders errors when data is invalid", %{conn: conn} do
       %{"errors" => errors} =
         conn
-        |> authenticate
-        |> post(Routes.draft_path(conn, :create), draft: @invalid_attrs)
+        |> post(Routes.user_draft_path(conn, :create, user_id(conn)), draft: @invalid_attrs)
         |> get_resp_body
 
       assert errors != %{}
@@ -86,16 +86,14 @@ defmodule ApiWeb.DraftControllerTest do
     test "renders draft when data is valid", %{conn: conn, draft: %Draft{id: id} = draft} do
       %{"draft" => draft} =
         conn
-        |> authenticate
-        |> put(Routes.draft_path(conn, :update, draft), draft: @update_attrs)
+        |> put(Routes.user_draft_path(conn, :update, user_id(conn), draft), draft: @update_attrs)
         |> get_resp_body
 
       assert %{"id" => ^id} = draft
 
       %{"draft" => draft} =
         conn
-        |> authenticate
-        |> get(Routes.draft_path(conn, :show, id))
+        |> get(Routes.user_draft_path(conn, :show, user_id(conn), id))
         |> get_resp_body
 
       assert %{
@@ -108,8 +106,7 @@ defmodule ApiWeb.DraftControllerTest do
     test "renders errors when data is invalid", %{conn: conn, draft: draft} do
       %{"errors" => errors} =
         conn
-        |> authenticate
-        |> put(Routes.draft_path(conn, :update, draft), draft: @invalid_attrs)
+        |> put(Routes.user_draft_path(conn, :update, user_id(conn), draft), draft: @invalid_attrs)
         |> get_resp_body
 
       assert errors != %{}
@@ -122,14 +119,13 @@ defmodule ApiWeb.DraftControllerTest do
     test "deletes chosen draft", %{conn: conn, draft: draft} do
       resp =
         conn
-        |> authenticate
-        |> delete(Routes.draft_path(conn, :delete, draft))
+        |> delete(Routes.user_draft_path(conn, :delete, user_id(conn), draft))
 
       assert resp.status == 204
       assert resp.resp_body == ""
 
       assert_error_sent 404, fn ->
-        conn |> authenticate |> get(Routes.draft_path(conn, :show, draft))
+        conn |> get(Routes.user_draft_path(conn, :show, user_id(conn), draft))
       end
     end
   end
@@ -139,8 +135,12 @@ defmodule ApiWeb.DraftControllerTest do
     [draft: draft]
   end
 
+  defp user_id(conn) do
+    conn.assigns.user.id
+  end
+
   defp authenticate(conn) do
     %{id: id} = fixture(:user)
-    conn |> init_test_session(current_user_id: id)
+    conn |> init_test_session(current_user_id: id) |> Conn.assign(:user, %{id: id, name: "test user"})
   end
 end

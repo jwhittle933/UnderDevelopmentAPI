@@ -4,6 +4,7 @@ defmodule ApiWeb.PostController do
   use Api.Blog
   alias Api.Blog.Post
 
+
   action_fallback ApiWeb.FallbackController
 
   def index(conn, _params) do
@@ -14,7 +15,7 @@ defmodule ApiWeb.PostController do
   @doc """
     :create method is hidden behind auth
   """
-  def create(conn, %{"post" => post_params}) do
+  def create(conn, %{"user_id" => user_id, "post" => post_params}) do
     with {:ok, %Post{} = post} <- create_post(post_params) do
       conn
       |> put_status(:created)

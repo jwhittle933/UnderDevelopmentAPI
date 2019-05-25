@@ -34,10 +34,10 @@ defmodule ApiWeb.Router do
     resources "/comments", CommentController
     resources "/replies", ReplyController
     resources "/subscriptions", SubscriptionController
+    get "/author", UserController, :author
+    get "/authors", UserController, :authors
 
     @doc """
-      Scope /api/auth for user login/logout
-
       Access to these endpoints will be controlled by UI
       where checks will be made on the session for
       current_user and logged_in status. If nil, redirect
@@ -48,10 +48,8 @@ defmodule ApiWeb.Router do
       and a user_id will be stored in a session. These will be used
       in the UI for special access and controls.
     """
-    scope "/auth" do
-      post "/login", AuthController, :login
-      get "/logout", AuthController, :logout
-    end
+    post "/login", AuthController, :login
+    get "/logout", AuthController, :logout
 
     @doc """
       Scope /api/users for authorized user content creation
@@ -60,9 +58,13 @@ defmodule ApiWeb.Router do
     """
     scope "/users" do
       pipe_through :auth
-      resources "/", UserController
-      resources "/posts", PostController, only: [:create, :update, :delete]
-      resources "/drafts", DraftController
+      resources "/", UserController do
+        resources "/posts", PostController, only: [:create, :update, :delete]
+        resources "/drafts", DraftController
+      end
     end
+      # GET to /api/users/drafts should hit :index on draft controller, but
+      # instead is hitting :show on user controller where draft is the
+      # :id path param for the /users route.
   end
 end
