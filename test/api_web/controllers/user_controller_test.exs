@@ -130,16 +130,19 @@ defmodule ApiWeb.UserControllerTest do
     setup [:new_user]
 
     test "deletes chosen user", %{conn: conn, user: user} do
-      %{"msg" => msg} =
+      resp =
         conn
         |> delete(Routes.user_path(conn, :delete, user))
+
+      assert resp.status == 204
+      assert resp.resp_body == ""
+
+      %{"error" => error} =
+        conn
+        |> get(Routes.user_path(conn, :show, user))
         |> get_resp_body
 
-      assert msg == "User deleted."
-
-      assert_error_sent 404, fn ->
-        get(conn, Routes.user_path(conn, :show, user))
-      end
+      assert error == "Not Found."
     end
   end
 

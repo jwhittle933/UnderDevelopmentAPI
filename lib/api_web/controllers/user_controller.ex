@@ -24,11 +24,12 @@ defmodule ApiWeb.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = get_user(id)
-    conn
-    |> put_status(:ok)
-    |> put_resp_header("content-type", "application/json")
-    |> json(%{user: user})
+    with %User{} = user <- get_user(id) do
+      conn
+      |> put_status(:ok)
+      |> put_resp_header("content-type", "application/json")
+      |> json(%{user: user})
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
@@ -43,9 +44,7 @@ defmodule ApiWeb.UserController do
     user = get_user(id)
 
     with {:ok, %User{}} <- delete_user(user) do
-      conn
-      |> put_status(:no_content)
-      |> json(%{msg: "User deleted."})
+      send_resp(conn, :no_content, "")
     end
   end
 

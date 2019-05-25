@@ -125,7 +125,7 @@ defmodule ApiWeb.DraftControllerTest do
       assert resp.resp_body == ""
 
       assert_error_sent 404, fn ->
-        conn |> authenticate |> get(Routes.user_draft_path(conn, :show, user_id(conn), draft))
+        conn |> get(Routes.user_draft_path(conn, :show, user_id(conn), draft))
       end
     end
   end
