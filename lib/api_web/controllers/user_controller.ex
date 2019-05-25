@@ -19,20 +19,23 @@ defmodule ApiWeb.UserController do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
-      |> send_resp(200, user: user)
+      |> json(%{user: user})
     end
   end
 
   def show(conn, %{"id" => id}) do
     user = get_user(id)
-    json(conn, %{user: user})
+    conn
+    |> put_status(:ok)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{user: user})
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = get_user(id)
 
     with {:ok, %User{} = user} <- update_user(user, user_params) do
-      json(conn, %{user: user})
+      conn |> json(%{user: user})
     end
   end
 
@@ -40,23 +43,26 @@ defmodule ApiWeb.UserController do
     user = get_user(id)
 
     with {:ok, %User{}} <- delete_user(user) do
-      send_resp(conn, :no_content, "")
+      conn
+      |> put_status(:no_content)
+      |> json(%{msg: "User deleted."})
     end
   end
 
-  def author(conn, _params) do
+  def author(conn, %{"id" => id}) do
+    author = get_author(id)
+    conn
+    |> put_status(:ok)
+    |> put_resp_header("content-type", "application/json")
+    |> json(%{author: author})
   end
 
   def authors(conn, _params) do
-    authors = get_list_authors()
+    authors = list_authors()
     conn
     |> put_status(:ok)
     |> put_resp_header("content-type", "application/json")
     |> json(%{authors: authors})
-  end
-
-  defp get_single_author do
-
   end
 
   defp get_list_authors do
