@@ -6,6 +6,9 @@ defmodule Api.Blog.Fragments.Replies do
   @doc """
   Returns the list of replies.
 
+  *******NEEDS TO BE UPDATED: THIS METHOD SHOULD LIST ALL REPLIES ASSOCIATED
+  WITH A SPECIFIC COMMENT. SHOULD QUERY FOR COMMENT BY :comment_id
+
   ## Examples
 
       iex> list_replies()
@@ -20,6 +23,10 @@ defmodule Api.Blog.Fragments.Replies do
   Gets a single reply.
 
   Raises `Ecto.NoResultsError` if the Reply does not exist.
+
+  ******* NEEDS TO BE UPDATED: REPLIES ARE NOT RELEVANT APART
+  FROM AN ASSOCIATED COMMENT. WOULD THERE EVER BE A NEED TO QUERY FOR
+  A SINGLE REPLY?
 
   ## Examples
 
