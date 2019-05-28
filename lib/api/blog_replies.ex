@@ -1,13 +1,15 @@
 defmodule Api.Blog.Fragments.Replies do
   import Ecto.Changeset
+  import Ecto.Query
   alias Api.Repo
   alias Api.Blog.Reply
 
   @doc """
-  Returns the list of replies.
+  Returns the list of replies associated with a specific comment.
 
-  *******NEEDS TO BE UPDATED: THIS METHOD SHOULD LIST ALL REPLIES ASSOCIATED
-  WITH A SPECIFIC COMMENT. SHOULD QUERY FOR COMMENT BY :comment_id
+  THIS METHOD MAY NOT BE USED. FETCHING COMMENTS SHOULD ALSO PRELOAD
+  REPLIES. AN ALTERNATIVE IS TO ONLY SHOW COMMENTS ON THE CLIENT, UNLESS
+  A USER REQUESTS REPLIES.
 
   ## Examples
 
@@ -15,18 +17,15 @@ defmodule Api.Blog.Fragments.Replies do
       [%Reply{}, ...]
 
   """
-  def list_replies do
-    Repo.all(Reply)
+  def list_replies(comment_id) do
+    query = from r in Reply, where: r.comment_id == comment_id
+    Repo.all(query)
   end
 
   @doc """
-  Gets a single reply.
+  Gets a single reply. WILL LIKELY NEVER BE USED.
 
   Raises `Ecto.NoResultsError` if the Reply does not exist.
-
-  ******* NEEDS TO BE UPDATED: REPLIES ARE NOT RELEVANT APART
-  FROM AN ASSOCIATED COMMENT. WOULD THERE EVER BE A NEED TO QUERY FOR
-  A SINGLE REPLY?
 
   ## Examples
 
@@ -40,7 +39,7 @@ defmodule Api.Blog.Fragments.Replies do
   def get_reply!(id), do: Repo.get!(Reply, id)
 
   @doc """
-  Creates a reply.
+  Creates a reply. CREATING REPLY WILL NEED A WAY TO TRACK THE CREATOR. IP?
 
   ## Examples
 
@@ -58,7 +57,7 @@ defmodule Api.Blog.Fragments.Replies do
   end
 
   @doc """
-  Updates a reply.
+  Updates a reply. UPDATING REPLIES WILL REQUIRE OWNERSHIP CHECKS OR ADMIN.
 
   ## Examples
 
@@ -76,7 +75,7 @@ defmodule Api.Blog.Fragments.Replies do
   end
 
   @doc """
-  Deletes a Reply.
+  Deletes a Reply. DELETING REPLIES WILL REQUIRE OWNERSHIP CHECKS OR ADMIN.
 
   ## Examples
 

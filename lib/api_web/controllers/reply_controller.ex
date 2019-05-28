@@ -1,13 +1,13 @@
 defmodule ApiWeb.ReplyController do
   use ApiWeb, :controller
 
-  use Api.Blog
+  use Api.Blog, :replies
   alias Api.Blog.Reply
 
   action_fallback ApiWeb.FallbackController
 
-  def index(conn, _params) do
-    replies = list_replies()
+  def index(conn, %{"comment_id" => comment_id}) do
+    replies = list_replies(comment_id)
     conn
     |> put_status(:ok)
     |> put_resp_header("content-type", "application/json")

@@ -3,14 +3,6 @@ defmodule ApiWeb.Router do
 
   @auth ApiWeb.Plug.Authenticate
 
-  pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-  end
-
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
@@ -63,8 +55,5 @@ defmodule ApiWeb.Router do
         resources "/drafts", DraftController
       end
     end
-      # GET to /api/users/drafts should hit :index on draft controller, but
-      # instead is hitting :show on user controller where draft is the
-      # :id path param for the /users route.
   end
 end
